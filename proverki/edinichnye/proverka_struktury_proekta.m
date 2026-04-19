@@ -1,6 +1,6 @@
 function proverka_struktury_proekta(koren_proekta)
 if nargin < 1 || strlength(string(koren_proekta)) == 0
-    error('Не задан корень проекта для проверки структуры.');
+    error('%s', 'Не задан корень проекта для проверки структуры.');
 end
 
 obyazatelnye_papki = {
@@ -33,24 +33,40 @@ obyazatelnye_faily = {
     fullfile('istochniki', 'perechen_istochnikov.md')
     'zapusk_proverok.m'
     fullfile('proverki', 'edinichnye', 'proverka_struktury_proekta.m')
+    fullfile('proverki', 'edinichnye', 'proverka_dokumentov_etapa_1.m')
+    fullfile('proverki', 'edinichnye', 'proverka_skrytyh_znakov.m')
+    fullfile('proverki', 'edinichnye', 'proverka_razmetki_markdown.m')
     fullfile('raschet', 'otsenka', 'soobshchenie.m')
     };
 
+proverit_papki(koren_proekta, obyazatelnye_papki);
+proverit_faily(koren_proekta, obyazatelnye_faily);
+
+soobshchenie('Структура проекта и обязательные документы присутствуют.');
+end
+
+function proverit_papki(koren_proekta, obyazatelnye_papki)
 for nomer_papki = 1:numel(obyazatelnye_papki)
     otnositelnyi_put = obyazatelnye_papki{nomer_papki};
     polnyi_put = fullfile(koren_proekta, otnositelnyi_put);
+
     if ~isfolder(polnyi_put)
-        error('Не найдена обязательная папка: %s', polnyi_put);
+        error('%s', sprintf( ...
+            'Не найдена обязательная папка: %s', ...
+            polnyi_put));
     end
 end
+end
 
+function proverit_faily(koren_proekta, obyazatelnye_faily)
 for nomer_faila = 1:numel(obyazatelnye_faily)
     otnositelnyi_put = obyazatelnye_faily{nomer_faila};
     polnyi_put = fullfile(koren_proekta, otnositelnyi_put);
+
     if ~isfile(polnyi_put)
-        error('Не найден обязательный файл: %s', polnyi_put);
+        error('%s', sprintf( ...
+            'Не найден обязательный файл: %s', ...
+            polnyi_put));
     end
 end
-
-soobshchenie('Структура проекта и обязательные документы присутствуют.');
 end
