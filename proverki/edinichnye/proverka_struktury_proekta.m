@@ -12,9 +12,11 @@ obyazatelnye_papki = {
     fullfile('raschet', 'upravlenie')
     fullfile('raschet', 'obuchenie')
     fullfile('raschet', 'otsenka')
+    fullfile('raschet', 'scenarii')
     fullfile('bloki', 'sozdanie_modelei')
     fullfile('bloki', 'modeli')
     fullfile('opyty', 'scenarii')
+    fullfile('opyty', 'scenarii', 'bazovye')
     fullfile('opyty', 'zapusk')
     fullfile('opyty', 'rezultaty')
     fullfile('proverki', 'edinichnye')
@@ -32,11 +34,20 @@ obyazatelnye_faily = {
     'ZHURNAL_IZMENENII.md'
     fullfile('istochniki', 'perechen_istochnikov.md')
     'zapusk_proverok.m'
+    fullfile('opyty', 'scenarii', 'OPISANIE_SCENARIEV.md')
+    fullfile('opyty', 'scenarii', 'shema_scenariya.json')
     fullfile('proverki', 'edinichnye', 'proverka_struktury_proekta.m')
     fullfile('proverki', 'edinichnye', 'proverka_dokumentov_etapa_1.m')
+    fullfile('proverki', 'edinichnye', 'proverka_dokumentov_etapa_2.m')
     fullfile('proverki', 'edinichnye', 'proverka_skrytyh_znakov.m')
+    fullfile('proverki', 'edinichnye', 'proverka_fizicheskogo_formata_tekstov.m')
     fullfile('proverki', 'edinichnye', 'proverka_razmetki_markdown.m')
+    fullfile('proverki', 'edinichnye', 'proverka_scenariev_etapa_2.m')
     fullfile('raschet', 'otsenka', 'soobshchenie.m')
+    fullfile('raschet', 'scenarii', 'zagruzit_scenarii.m')
+    fullfile('raschet', 'scenarii', 'spisok_scenariev.m')
+    fullfile('raschet', 'scenarii', 'proverit_scenarii.m')
+    fullfile('raschet', 'scenarii', 'proverit_vse_scenarii.m')
     };
 
 proverit_papki(koren_proekta, obyazatelnye_papki);

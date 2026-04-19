@@ -1,0 +1,131 @@
+{
+  "id_scenariya": "pomekha_svyazi",
+  "nazvanie": "Помеха связи для будущей проверки ухудшения передачи сведений",
+  "opisanie": "Сценарий задает рой из десяти БВС и область действия помехи связи, влияющей только на будущую расчетную оценку качества передачи сведений.",
+  "nachalnoe_chislo": 505,
+  "vremya_modelirovaniya": 210.0,
+  "shag_modelirovaniya": 0.5,
+  "oblast_poleta": {
+    "xmin": 0.0,
+    "xmax": 1300.0,
+    "ymin": 0.0,
+    "ymax": 900.0,
+    "zmin": 0.0,
+    "zmax": 240.0
+  },
+  "sostav_roya": [
+    {
+      "id_bvs": "bvs_01",
+      "rol": "vedushchii",
+      "nachalnoe_polozhenie": [180.0, 140.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 1.0
+    },
+    {
+      "id_bvs": "bvs_02",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [220.0, 170.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.99
+    },
+    {
+      "id_bvs": "bvs_03",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [260.0, 200.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_04",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [300.0, 230.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_05",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [340.0, 260.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_06",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [380.0, 290.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_07",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [420.0, 320.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.96
+    },
+    {
+      "id_bvs": "bvs_08",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [460.0, 350.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.96
+    },
+    {
+      "id_bvs": "bvs_09",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [500.0, 380.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.95
+    },
+    {
+      "id_bvs": "bvs_10",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [540.0, 410.0, 95.0],
+      "nachalnaya_skorost": [3.2, 0.8, 0.0],
+      "zapas_energii": 0.95
+    }
+  ],
+  "tseli_zadaniya": [
+    {
+      "id_tseli": "tsel_peredachi_svedenii",
+      "tip": "peredacha_svedenii",
+      "opisanie": "Подготовить сценарий для будущей проверки ухудшения передачи сведений в ограниченной области.",
+      "kriterii": "Проектная оценка доли доставленных сообщений и средней задержки."
+    }
+  ],
+  "prepyatstviya": [],
+  "zony_zapreta": [],
+  "otkazy": [],
+  "pomekhi_svyazi": [
+    {
+      "id_sobytiya": "pomekha_01",
+      "opisanie": "Будущий расчетный фактор ухудшения качества передачи сведений в ограниченной области.",
+      "vremya_nachala": 60.0,
+      "vremya_okonchaniya": 150.0,
+      "koefficient_uhudsheniya": 0.45,
+      "oblast_deistviya": {
+        "xmin": 600.0,
+        "xmax": 900.0,
+        "ymin": 300.0,
+        "ymax": 620.0,
+        "zmin": 20.0,
+        "zmax": 180.0
+      }
+    }
+  ],
+  "ogranicheniya_bezopasnosti": {
+    "issledovatelskii_harakter": true,
+    "net_realnogo_upravleniya": true,
+    "net_vrednogo_naznacheniya": true
+  },
+  "ozhidaemye_pokazateli": [
+    {
+      "id_pokazatelya": "dolya_dostavlennyh_soobshenii",
+      "opisanie": "Будущая оценка доли доставленных сообщений при ухудшении качества передачи сведений."
+    },
+    {
+      "id_pokazatelya": "srednyaya_zaderzhka_dostavki",
+      "opisanie": "Будущая оценка средней задержки доставки в области действия помехи связи."
+    }
+  ]
+}

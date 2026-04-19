@@ -1,0 +1,101 @@
+{
+  "versiya_shemy": "etap_2",
+  "naznachenie": "Внутреннее описание обязательного состава данных сценария этапа 2.",
+  "obyazatelnye_polya": [
+    {
+      "imya": "id_scenariya",
+      "tip": "stroka",
+      "opisanie": "Уникальный идентификатор сценария."
+    },
+    {
+      "imya": "nazvanie",
+      "tip": "stroka",
+      "opisanie": "Русское название сценария."
+    },
+    {
+      "imya": "opisanie",
+      "tip": "stroka",
+      "opisanie": "Русское описание назначения сценария."
+    },
+    {
+      "imya": "nachalnoe_chislo",
+      "tip": "celoe_chislo",
+      "opisanie": "Начальное число случайных величин."
+    },
+    {
+      "imya": "vremya_modelirovaniya",
+      "tip": "chislo",
+      "opisanie": "Будущая длительность опыта."
+    },
+    {
+      "imya": "shag_modelirovaniya",
+      "tip": "chislo",
+      "opisanie": "Будущий шаг расчета."
+    },
+    {
+      "imya": "oblast_poleta",
+      "tip": "obekt",
+      "opisanie": "Границы области полета.",
+      "podpolya": [
+        "xmin",
+        "xmax",
+        "ymin",
+        "ymax",
+        "zmin",
+        "zmax"
+      ]
+    },
+    {
+      "imya": "sostav_roya",
+      "tip": "massiv_obektov",
+      "opisanie": "Список БВС с начальными параметрами.",
+      "podpolya": [
+        "id_bvs",
+        "rol",
+        "nachalnoe_polozhenie",
+        "nachalnaya_skorost",
+        "zapas_energii"
+      ]
+    },
+    {
+      "imya": "tseli_zadaniya",
+      "tip": "massiv_obektov",
+      "opisanie": "Цели задания исследовательского характера."
+    },
+    {
+      "imya": "prepyatstviya",
+      "tip": "massiv_obektov",
+      "opisanie": "Геометрическое описание препятствий."
+    },
+    {
+      "imya": "zony_zapreta",
+      "tip": "massiv_obektov",
+      "opisanie": "Геометрическое описание зон запрета."
+    },
+    {
+      "imya": "otkazy",
+      "tip": "massiv_obektov",
+      "opisanie": "Будущие события отказов."
+    },
+    {
+      "imya": "pomekhi_svyazi",
+      "tip": "massiv_obektov",
+      "opisanie": "Будущие события ухудшения качества передачи сведений."
+    },
+    {
+      "imya": "ogranicheniya_bezopasnosti",
+      "tip": "obekt",
+      "opisanie": "Ограничения исследовательского и учебного характера.",
+      "podpolya": [
+        "issledovatelskii_harakter",
+        "net_realnogo_upravleniya",
+        "net_vrednogo_naznacheniya"
+      ]
+    },
+    {
+      "imya": "ozhidaemye_pokazateli",
+      "tip": "massiv_obektov",
+      "opisanie": "Проектные показатели, которые будут оцениваться позднее."
+    }
+  ]
+}
