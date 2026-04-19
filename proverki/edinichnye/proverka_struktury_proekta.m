@@ -33,6 +33,8 @@ obyazatelnye_faily = {
     fullfile('istochniki', 'perechen_istochnikov.md')
     'zapusk_proverok.m'
     fullfile('proverki', 'edinichnye', 'proverka_struktury_proekta.m')
+    fullfile('proverki', 'edinichnye', 'proverka_dokumentov_etapa_1.m')
+    fullfile('proverki', 'edinichnye', 'proverka_skrytyh_znakov.m')
     fullfile('raschet', 'otsenka', 'soobshchenie.m')
     };
 

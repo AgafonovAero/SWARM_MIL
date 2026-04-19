@@ -5,13 +5,16 @@ addpath(fullfile(koren_proekta, 'raschet', 'otsenka'));
 addpath(fullfile(koren_proekta, 'proverki', 'edinichnye'));
 
 try
-    soobshchenie('Начат запуск проверок этапа 0.');
+    soobshchenie('Начат запуск проверок этапов 0 и 1.');
     proverka_struktury_proekta(koren_proekta);
     proverit_zapis_v_rezultaty(koren_proekta);
     vyvesti_svedeniya_o_sredah();
     soobshchenie('Проверки этапа 0 завершены успешно');
+    proverka_dokumentov_etapa_1(koren_proekta);
+    proverka_skrytyh_znakov(koren_proekta);
+    soobshchenie('Проверки этапа 1 завершены успешно');
 catch oshibka_proverki
-    soobshchenie(sprintf('Проверки этапа 0 завершены с ошибкой: %s', oshibka_proverki.message), 'oshibka');
+    soobshchenie(sprintf('Проверки проекта завершены с ошибкой: %s', oshibka_proverki.message), 'oshibka');
     rethrow(oshibka_proverki);
 end
 end
@@ -26,7 +29,7 @@ if identifikator == -1
     error('Нет возможности записи в папку: %s. %s', papka_rezultatov, soobshchenie_oshibki);
 end
 
-fprintf(identifikator, 'Проверка записи этапа 0.\n');
+fprintf(identifikator, 'Проверка записи этапа 0.%s', newline);
 status_zakrytiya = fclose(identifikator);
 if status_zakrytiya ~= 0
     error('Не удалось закрыть временный файл проверки записи: %s', put_k_failu);
