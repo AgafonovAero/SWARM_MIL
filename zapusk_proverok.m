@@ -2,11 +2,13 @@ function zapusk_proverok()
 koren_proekta = fileparts(mfilename('fullpath'));
 
 addpath(fullfile(koren_proekta, 'raschet', 'otsenka'));
+addpath(fullfile(koren_proekta, 'raschet', 'bvs'));
+addpath(fullfile(koren_proekta, 'raschet', 'sreda'));
 addpath(fullfile(koren_proekta, 'raschet', 'scenarii'));
 addpath(fullfile(koren_proekta, 'proverki', 'edinichnye'));
 
 try
-    soobshchenie('Начат запуск проверок этапов 0, 1 и 2.');
+    soobshchenie('Начат запуск проверок этапов 0, 1, 2 и 3.');
 
     proverka_struktury_proekta(koren_proekta);
     proverit_zapis_v_rezultaty(koren_proekta);
@@ -22,9 +24,13 @@ try
     proverka_dokumentov_etapa_2(koren_proekta);
     proverka_scenariev_etapa_2(koren_proekta);
     soobshchenie('Проверки этапа 2 завершены успешно');
+
+    proverka_kinematiki_etapa_3(koren_proekta);
+    soobshchenie('Проверки этапа 3 завершены успешно');
 catch oshibka_proverki
     soobshchenie( ...
-        sprintf('Проверки проекта завершены с ошибкой: %s', oshibka_proverki.message), ...
+        sprintf('Проверки проекта завершены с ошибкой: %s', ...
+        oshibka_proverki.message), ...
         'oshibka');
     rethrow(oshibka_proverki);
 end
