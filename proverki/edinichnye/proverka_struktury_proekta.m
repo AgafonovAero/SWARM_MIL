@@ -1,9 +1,11 @@
 function proverka_struktury_proekta(koren_proekta)
 if nargin < 1 || strlength(string(koren_proekta)) == 0
-    error('%s', 'Не задан корень проекта для проверки структуры.');
+    error('%s', ...
+        'Не задан корень проекта для проверки структуры.');
 end
 
 obyazatelnye_papki = {
+    'apps'
     'istochniki'
     fullfile('raschet', 'bvs')
     fullfile('raschet', 'roi')
@@ -11,11 +13,11 @@ obyazatelnye_papki = {
     fullfile('raschet', 'svyaz')
     fullfile('raschet', 'zveno')
     fullfile('raschet', 'peredacha')
-    'visualization'
     fullfile('raschet', 'upravlenie')
     fullfile('raschet', 'obuchenie')
     fullfile('raschet', 'otsenka')
     fullfile('raschet', 'scenarii')
+    'visualization'
     fullfile('bloki', 'sozdanie_modelei')
     fullfile('bloki', 'modeli')
     fullfile('opyty', 'scenarii')
@@ -30,13 +32,16 @@ obyazatelnye_papki = {
     };
 
 obyazatelnye_faily = {
+    'README.md'
     'OPISANIE.md'
     'TEHNICHESKOE_ZADANIE.md'
     'SLOVAR_TERMINOV.md'
     'ZHURNAL_DOPUSCHENII.md'
     'ZHURNAL_IZMENENII.md'
-    fullfile('istochniki', 'perechen_istochnikov.md')
     'zapusk_proverok.m'
+    'zapusk_demonstratora_roya.m'
+    'zapusk_pulta_issledovatelya.m'
+    fullfile('istochniki', 'perechen_istochnikov.md')
     fullfile('opyty', 'scenarii', 'OPISANIE_SCENARIEV.md')
     fullfile('opyty', 'scenarii', 'shema_scenariya.json')
     fullfile('proverki', 'edinichnye', 'proverka_struktury_proekta.m')
@@ -51,6 +56,7 @@ obyazatelnye_faily = {
     fullfile('proverki', 'edinichnye', 'proverka_zvenev_etapa_5.m')
     fullfile('proverki', 'edinichnye', 'proverka_peredachi_etapa_6.m')
     fullfile('proverki', 'edinichnye', 'proverka_vizualizacii_etapa_7.m')
+    fullfile('proverki', 'edinichnye', 'proverka_pulta_etapa_8.m')
     fullfile('raschet', 'otsenka', 'soobshchenie.m')
     fullfile('raschet', 'bvs', 'OPISANIE_KINEMATIKI.md')
     fullfile('raschet', 'bvs', 'sozdat_sostoyanie_bvs_iz_scenariya.m')
@@ -87,7 +93,6 @@ obyazatelnye_faily = {
     fullfile('raschet', 'peredacha', 'vypolnit_shag_peredachi.m')
     fullfile('raschet', 'peredacha', 'raschet_peredachi_po_trasse.m')
     fullfile('raschet', 'peredacha', 'otsenit_peredachu.m')
-    'zapusk_demonstratora_roya.m'
     fullfile('visualization', 'OPISANIE_VIZUALIZACII.md')
     fullfile('visualization', 'sobrat_dannye_demonstracii_roya.m')
     fullfile('visualization', 'podgotovit_dannye_vizualizacii.m')
@@ -101,12 +106,29 @@ obyazatelnye_faily = {
     fullfile('raschet', 'scenarii', 'spisok_scenariev.m')
     fullfile('raschet', 'scenarii', 'proverit_scenarii.m')
     fullfile('raschet', 'scenarii', 'proverit_vse_scenarii.m')
+    fullfile('apps', 'OPISANIE_PULTA_ISSLEDOVATELYA.md')
+    fullfile('apps', 'sozdat_pult_issledovatelya.m')
+    fullfile('apps', 'sozdat_sostoyanie_pulta.m')
+    fullfile('apps', 'zapolnit_vkladku_scenariya.m')
+    fullfile('apps', 'zapolnit_vkladku_svyazi.m')
+    fullfile('apps', 'zapolnit_vkladku_zvenev.m')
+    fullfile('apps', 'zapolnit_vkladku_peredachi.m')
+    fullfile('apps', 'zapolnit_vkladku_zapuska.m')
+    fullfile('apps', 'zapolnit_vkladku_vosproizvedeniya.m')
+    fullfile('apps', 'zapolnit_vkladku_pokazatelei.m')
+    fullfile('apps', 'zapolnit_vkladku_zhurnala.m')
+    fullfile('apps', 'vypolnit_raschet_iz_pulta.m')
+    fullfile('apps', 'obnovit_pult_posle_rascheta.m')
+    fullfile('apps', 'poluchit_parametry_iz_pulta.m')
+    fullfile('apps', 'proverit_parametry_pulta.m')
+    fullfile('apps', 'dobavit_zapis_v_zhurnal_pulta.m')
     };
 
 proverit_papki(koren_proekta, obyazatelnye_papki);
 proverit_faily(koren_proekta, obyazatelnye_faily);
 
-soobshchenie('Структура проекта и обязательные документы присутствуют.');
+soobshchenie( ...
+    'Структура проекта и обязательные документы присутствуют.');
 end
 
 function proverit_papki(koren_proekta, obyazatelnye_papki)
