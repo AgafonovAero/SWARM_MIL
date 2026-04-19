@@ -5,11 +5,12 @@ addpath(fullfile(koren_proekta, 'raschet', 'otsenka'));
 addpath(fullfile(koren_proekta, 'raschet', 'bvs'));
 addpath(fullfile(koren_proekta, 'raschet', 'sreda'));
 addpath(fullfile(koren_proekta, 'raschet', 'svyaz'));
+addpath(fullfile(koren_proekta, 'raschet', 'zveno'));
 addpath(fullfile(koren_proekta, 'raschet', 'scenarii'));
 addpath(fullfile(koren_proekta, 'proverki', 'edinichnye'));
 
 try
-    soobshchenie('Начат запуск проверок этапов 0, 1, 2, 3 и 4.');
+    soobshchenie('Начат запуск проверок этапов 0, 1, 2, 3, 4 и 5.');
 
     proverka_struktury_proekta(koren_proekta);
     proverit_zapis_v_rezultaty(koren_proekta);
@@ -31,6 +32,9 @@ try
 
     proverka_svyazi_etapa_4(koren_proekta);
     soobshchenie('Проверки этапа 4 завершены успешно');
+
+    proverka_zvenev_etapa_5(koren_proekta);
+    soobshchenie('Проверки этапа 5 завершены успешно');
 catch oshibka_proverki
     soobshchenie( ...
         sprintf( ...
