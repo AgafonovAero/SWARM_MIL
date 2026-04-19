@@ -1,0 +1,39 @@
+{
+  "id_serii": "malaya_seriya_stroi_i_svyaz",
+  "nazvanie": "Малая серия сравнения строя и связи",
+  "spisok_scenariev": [
+    "stroi_malyi"
+  ],
+  "chislo_povtorov": 1,
+  "varianty_parametrov_svyazi": [
+    {
+      "maksimalnaya_dalnost_m": 80.0,
+      "porog_otnosheniya_signal_shum": 3.0
+    },
+    {
+      "maksimalnaya_dalnost_m": 120.0,
+      "porog_otnosheniya_signal_shum": 3.0
+    },
+    {
+      "maksimalnaya_dalnost_m": 60.0,
+      "porog_otnosheniya_signal_shum": 5.0
+    }
+  ],
+  "varianty_parametrov_zvenev": [
+    {
+      "minimalnyi_razmer_zvena": 1,
+      "maksimalnyi_razmer_zvena": 3
+    }
+  ],
+  "varianty_parametrov_peredachi": [
+    {
+      "maksimalnyi_razmer_ocheredi": 6,
+      "maksimalnoe_chislo_peresylok": 8,
+      "vremya_zhizni_soobshcheniya_s": 30.0
+    }
+  ],
+  "sohranyat_grafiki": true,
+  "sohranyat_otchet": true,
+  "ogranichenie_malogo_rezhima_proverki": 3,
+  "primechanie": "План малой серии для приемки этапа 10 без сохранения видео."
+}
