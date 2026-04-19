@@ -9,7 +9,27 @@ tekst_slovarya = prochitat_dokument(put_k_slovaryu);
 tekst_istochnikov = prochitat_dokument(put_k_istochnikam);
 tekst_dopushcheniy = prochitat_dokument(put_k_dopushcheniyam);
 
-obyazatelnye_razdely_tz = {
+proverit_razdely_tz(put_k_tz, tekst_tz);
+proverit_terminy_slovarya(put_k_slovaryu, tekst_slovarya);
+proverit_istochniki(put_k_istochnikam, tekst_istochnikov);
+proverit_razdely_dopushcheniy(put_k_dopushcheniyam, tekst_dopushcheniy);
+
+soobshchenie('Документы этапа 1 содержат обязательные разделы, термины и источники.');
+end
+
+function tekst = prochitat_dokument(put_k_failu)
+if ~isfile(put_k_failu)
+    error('%s', sprintf('Не найден документ: %s', put_k_failu));
+end
+
+tekst = fileread(put_k_failu);
+if strlength(strtrim(string(tekst))) == 0
+    error('%s', sprintf('Документ пустой: %s', put_k_failu));
+end
+end
+
+function proverit_razdely_tz(put_k_failu, tekst)
+obyazatelnye_razdely = {
     'Общие сведения'
     'Цели и назначение разработки'
     'Характеристика объекта моделирования'
@@ -24,6 +44,7 @@ obyazatelnye_razdely_tz = {
     'Требования к ограничениям безопасности моделирования'
     'Требования к математическому обеспечению'
     'Требования к программному обеспечению'
+    'Требования к языку и именованию'
     'Требования к информационному обеспечению'
     'Показатели качества'
     'Стадии и этапы работ'
@@ -32,23 +53,19 @@ obyazatelnye_razdely_tz = {
     'Перечень документов проекта'
     };
 
-obyazatelnye_razdely_slovarya = {
-    'Словарь терминов'
-    };
+for nomer_razdela = 1:numel(obyazatelnye_razdely)
+    nazvanie_razdela = obyazatelnye_razdely{nomer_razdela};
+    pattern = postroit_shablon_zagolovka({'##', '###'}, nazvanie_razdela, true);
 
-obyazatelnye_razdely_istochnikov = {
-    'Нормативные источники'
-    'Научные источники'
-    'Сведения о расчетной и блочной среде'
-    'Внутренние документы проекта'
-    };
+    if ~soderzhit_shablon_zagolovka(tekst, pattern)
+        error('%s', sprintf( ...
+            'В документе %s отсутствует обязательный раздел: %s', ...
+            put_k_failu, nazvanie_razdela));
+    end
+end
+end
 
-obyazatelnye_razdely_dopushcheniy = {
-    'Принятые допущения'
-    'Еще не проверенные допущения'
-    'Ограничения применимости'
-    };
-
+function proverit_terminy_slovarya(put_k_failu, tekst)
 obyazatelnye_terminy = {
     'БВС'
     'Беспилотная авиационная система'
@@ -87,60 +104,155 @@ obyazatelnye_terminy = {
     'Протокол опыта'
     };
 
+for nomer_termina = 1:numel(obyazatelnye_terminy)
+    termin = obyazatelnye_terminy{nomer_termina};
+    blok_termina = poluchit_blok_po_zagolovku(tekst, '##', termin, {'##'});
+
+    if isempty(blok_termina)
+        error('%s', sprintf( ...
+            'В словаре %s отсутствует обязательный термин: %s', ...
+            put_k_failu, termin));
+    end
+
+    proverit_pole_v_bloke(put_k_failu, termin, blok_termina, ...
+        'Краткое определение:', 'У термина отсутствует краткое определение');
+    proverit_pole_v_bloke(put_k_failu, termin, blok_termina, ...
+        'Использование в проекте:', 'У термина отсутствует строка использования');
+    proverit_pole_v_bloke(put_k_failu, termin, blok_termina, ...
+        'Источник или основание:', 'У термина отсутствует строка источника');
+end
+end
+
+function proverit_istochniki(put_k_failu, tekst)
+obyazatelnye_razdely = {
+    'Нормативные источники'
+    'Научные источники'
+    'Сведения о расчетной и блочной среде'
+    'Внутренние документы проекта'
+    };
+
+for nomer_razdela = 1:numel(obyazatelnye_razdely)
+    nazvanie_razdela = obyazatelnye_razdely{nomer_razdela};
+    pattern = postroit_shablon_zagolovka({'##'}, nazvanie_razdela, false);
+
+    if ~soderzhit_shablon_zagolovka(tekst, pattern)
+        error('%s', sprintf( ...
+            'В перечне источников %s отсутствует обязательный раздел: %s', ...
+            put_k_failu, nazvanie_razdela));
+    end
+end
+
 obyazatelnye_istochniki = {
-    'ГОСТ Р 57258-2016'
-    'ГОСТ 34.602-2020'
-    'ГОСТ 19.201-78'
+    'ГОСТ Р 57258-2016. Системы беспилотные авиационные. Термины и определения'
+    'ГОСТ 34.602-2020. Техническое задание на создание автоматизированной системы'
+    'ГОСТ 19.201-78. Техническое задание. Требования к содержанию и оформлению'
     'UAV Swarm Cooperation : A Networking Perspective'
     'MATLAB Release Notes'
     'Simulink Release Notes'
     };
 
-proverit_razdely(put_k_tz, tekst_tz, obyazatelnye_razdely_tz);
-proverit_razdely(put_k_slovaryu, tekst_slovarya, obyazatelnye_razdely_slovarya);
-proverit_razdely(put_k_istochnikam, tekst_istochnikov, obyazatelnye_razdely_istochnikov);
-proverit_razdely(put_k_dopushcheniyam, tekst_dopushcheniy, obyazatelnye_razdely_dopushcheniy);
-proverit_terminy(put_k_slovaryu, tekst_slovarya, obyazatelnye_terminy);
-proverit_istochniki(put_k_istochnikam, tekst_istochnikov, obyazatelnye_istochniki);
+for nomer_istochnika = 1:numel(obyazatelnye_istochniki)
+    nazvanie_istochnika = obyazatelnye_istochniki{nomer_istochnika};
+    blok_istochnika = poluchit_blok_po_zagolovku(tekst, '###', nazvanie_istochnika, {'###', '##'});
 
-soobshchenie('Документы этапа 1 содержат обязательные разделы, термины и источники.');
+    if isempty(blok_istochnika)
+        error('%s', sprintf( ...
+            'В перечне источников %s отсутствует обязательный источник: %s', ...
+            put_k_failu, nazvanie_istochnika));
+    end
+
+    proverit_pole_v_bloke(put_k_failu, nazvanie_istochnika, blok_istochnika, ...
+        'Наименование:', 'У источника отсутствует строка наименования');
+    proverit_pole_v_bloke(put_k_failu, nazvanie_istochnika, blok_istochnika, ...
+        'Назначение в проекте:', 'У источника отсутствует строка назначения');
+    proverit_pole_v_bloke(put_k_failu, nazvanie_istochnika, blok_istochnika, ...
+        'Какие разделы проекта на него опираются:', ...
+        'У источника отсутствует строка опоры разделов');
+end
 end
 
-function tekst = prochitat_dokument(put_k_failu)
-if ~isfile(put_k_failu)
-    error('Не найден документ: %s', put_k_failu);
-end
+function proverit_razdely_dopushcheniy(put_k_failu, tekst)
+obyazatelnye_razdely = {
+    'Принятые допущения'
+    'Еще не проверенные допущения'
+    'Ограничения применимости'
+    };
 
-tekst = fileread(put_k_failu);
-if strlength(strtrim(string(tekst))) == 0
-    error('Документ пустой: %s', put_k_failu);
-end
-end
-
-function proverit_razdely(put_k_failu, tekst, obyazatelnye_razdely)
 for nomer_razdela = 1:numel(obyazatelnye_razdely)
     nazvanie_razdela = obyazatelnye_razdely{nomer_razdela};
-    if ~contains(tekst, nazvanie_razdela)
-        error('Отсутствует обязательный раздел в документе %s: %s', put_k_failu, nazvanie_razdela);
+    pattern = postroit_shablon_zagolovka({'##'}, nazvanie_razdela, false);
+
+    if ~soderzhit_shablon_zagolovka(tekst, pattern)
+        error('%s', sprintf( ...
+            'В документе %s отсутствует обязательный раздел: %s', ...
+            put_k_failu, nazvanie_razdela));
     end
 end
 end
 
-function proverit_terminy(put_k_failu, tekst, obyazatelnye_terminy)
-for nomer_termina = 1:numel(obyazatelnye_terminy)
-    termin = obyazatelnye_terminy{nomer_termina};
-    zagolovok = ['## ' termin];
-    if ~contains(tekst, zagolovok)
-        error('Отсутствует обязательный термин в словаре %s: %s', put_k_failu, termin);
+function proverit_pole_v_bloke(put_k_failu, nazvanie_elementa, blok, prefiks, tekst_oshibki)
+pattern = ['^' regexptranslate('escape', prefiks) '(?:\s+\S.*)?$'];
+est_pole = ~isempty(regexp(blok, pattern, 'once', 'lineanchors'));
+
+if ~est_pole
+    error('%s', sprintf( ...
+        '%s в документе %s: %s', ...
+        tekst_oshibki, put_k_failu, nazvanie_elementa));
+end
+end
+
+function blok = poluchit_blok_po_zagolovku(tekst, marker_zagolovka, nazvanie, markery_konca)
+escaped_name = regexptranslate('escape', nazvanie);
+pattern_nachala = sprintf('^%s\\s+%s\\s*$', marker_zagolovka, escaped_name);
+stroki = regexp(tekst, '\r\n|\n|\r', 'split');
+nomer_nachala = 0;
+
+for nomer_stroki = 1:numel(stroki)
+    if ~isempty(regexp(stroki{nomer_stroki}, pattern_nachala, 'once'))
+        nomer_nachala = nomer_stroki;
+        break
+    end
+end
+
+if nomer_nachala == 0
+    blok = '';
+    return
+end
+
+nomer_konca = numel(stroki);
+for nomer_stroki = (nomer_nachala + 1):numel(stroki)
+    if yavlyaetsya_kontsom_bloka(stroki{nomer_stroki}, markery_konca)
+        nomer_konca = nomer_stroki - 1;
+        break
+    end
+end
+
+blok = strjoin(stroki((nomer_nachala + 1):nomer_konca), newline);
+end
+
+function rezultat = yavlyaetsya_kontsom_bloka(stroka, markery_konca)
+rezultat = false;
+
+for nomer_markera = 1:numel(markery_konca)
+    marker = regexptranslate('escape', markery_konca{nomer_markera});
+    if ~isempty(regexp(stroka, ['^' marker '\s+'], 'once'))
+        rezultat = true;
+        return
     end
 end
 end
 
-function proverit_istochniki(put_k_failu, tekst, obyazatelnye_istochniki)
-for nomer_istochnika = 1:numel(obyazatelnye_istochniki)
-    istochnik = obyazatelnye_istochniki{nomer_istochnika};
-    if ~contains(tekst, istochnik)
-        error('Отсутствует обязательный источник в перечне источников %s: %s', put_k_failu, istochnik);
-    end
+function pattern = postroit_shablon_zagolovka(markery, nazvanie, razreshit_numeraciyu)
+marker_chast = strjoin(markery, '|');
+escaped_name = regexptranslate('escape', nazvanie);
+
+if razreshit_numeraciyu
+    pattern = sprintf('^(?:%s)\\s+(?:\\d+\\.\\s*)?%s\\s*$', marker_chast, escaped_name);
+else
+    pattern = sprintf('^(?:%s)\\s+%s\\s*$', marker_chast, escaped_name);
 end
+end
+
+function rezultat = soderzhit_shablon_zagolovka(tekst, pattern)
+rezultat = ~isempty(regexp(tekst, pattern, 'once', 'lineanchors'));
 end
