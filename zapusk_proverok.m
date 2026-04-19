@@ -4,11 +4,12 @@ koren_proekta = fileparts(mfilename('fullpath'));
 addpath(fullfile(koren_proekta, 'raschet', 'otsenka'));
 addpath(fullfile(koren_proekta, 'raschet', 'bvs'));
 addpath(fullfile(koren_proekta, 'raschet', 'sreda'));
+addpath(fullfile(koren_proekta, 'raschet', 'svyaz'));
 addpath(fullfile(koren_proekta, 'raschet', 'scenarii'));
 addpath(fullfile(koren_proekta, 'proverki', 'edinichnye'));
 
 try
-    soobshchenie('Начат запуск проверок этапов 0, 1, 2 и 3.');
+    soobshchenie('Начат запуск проверок этапов 0, 1, 2, 3 и 4.');
 
     proverka_struktury_proekta(koren_proekta);
     proverit_zapis_v_rezultaty(koren_proekta);
@@ -27,9 +28,13 @@ try
 
     proverka_kinematiki_etapa_3(koren_proekta);
     soobshchenie('Проверки этапа 3 завершены успешно');
+
+    proverka_svyazi_etapa_4(koren_proekta);
+    soobshchenie('Проверки этапа 4 завершены успешно');
 catch oshibka_proverki
     soobshchenie( ...
-        sprintf('Проверки проекта завершены с ошибкой: %s', ...
+        sprintf( ...
+        'Проверки проекта завершены с ошибкой: %s', ...
         oshibka_proverki.message), ...
         'oshibka');
     rethrow(oshibka_proverki);
@@ -89,10 +94,12 @@ end
 
 soobshchenie(sprintf( ...
     'Расчетная среда MATLAB: выпуск %s, версия %s.', ...
-    svedeniya_o_matlab.Release, svedeniya_o_matlab.Version));
+    svedeniya_o_matlab.Release, ...
+    svedeniya_o_matlab.Version));
 soobshchenie(sprintf( ...
     'Блочная среда Simulink: выпуск %s, версия %s.', ...
-    svedeniya_o_simulink.Release, svedeniya_o_simulink.Version));
+    svedeniya_o_simulink.Release, ...
+    svedeniya_o_simulink.Version));
 end
 
 function bezopasno_zakryt_fail(identifikator)
