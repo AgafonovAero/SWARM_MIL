@@ -13,6 +13,7 @@ obyazatelnye_papki = {
     fullfile('raschet', 'svyaz')
     fullfile('raschet', 'zveno')
     fullfile('raschet', 'peredacha')
+    fullfile('raschet', 'opyty')
     fullfile('raschet', 'upravlenie')
     fullfile('raschet', 'obuchenie')
     fullfile('raschet', 'otsenka')
@@ -24,11 +25,13 @@ obyazatelnye_papki = {
     fullfile('bloki', 'modeli')
     fullfile('opyty', 'scenarii')
     fullfile('opyty', 'scenarii', 'bazovye')
+    fullfile('opyty', 'serii')
     fullfile('opyty', 'zapusk')
     fullfile('opyty', 'rezultaty')
     fullfile('proverki', 'edinichnye')
     fullfile('proverki', 'sistemnye')
     fullfile('otchety', 'risunki')
+    fullfile('otchety', 'serii')
     fullfile('otchety', 'tablitsy')
     fullfile('otchety', 'protokoly')
     };
@@ -64,6 +67,8 @@ obyazatelnye_faily = {
     fullfile('proverki', 'edinichnye', 'proverka_pulta_etapa_8.m')
     fullfile('proverki', 'edinichnye', ...
         'proverka_simulink_stenda_etapa_9.m')
+    fullfile('proverki', 'edinichnye', ...
+        'proverka_serii_opytov_etapa_10.m')
     fullfile('raschet', 'otsenka', 'soobshchenie.m')
     fullfile('raschet', 'bvs', 'OPISANIE_KINEMATIKI.md')
     fullfile('raschet', 'bvs', 'sozdat_sostoyanie_bvs_iz_scenariya.m')
@@ -101,12 +106,21 @@ obyazatelnye_faily = {
     fullfile('raschet', 'peredacha', 'vypolnit_shag_peredachi.m')
     fullfile('raschet', 'peredacha', 'raschet_peredachi_po_trasse.m')
     fullfile('raschet', 'peredacha', 'otsenit_peredachu.m')
+    fullfile('raschet', 'opyty', 'zagruzit_plan_serii_opytov.m')
+    fullfile('raschet', 'opyty', 'proverit_plan_serii_opytov.m')
+    fullfile('raschet', 'opyty', 'sozdat_varianty_serii_opytov.m')
+    fullfile('raschet', 'opyty', 'vypolnit_odin_opyt.m')
+    fullfile('raschet', 'opyty', 'izvlech_pokazateli_opyta.m')
+    fullfile('raschet', 'opyty', 'vypolnit_seriyu_opytov.m')
+    fullfile('raschet', 'opyty', 'sravnit_rezultaty_serii.m')
+    fullfile('raschet', 'opyty', 'sohranit_rezultaty_serii.m')
     fullfile('visualization', 'OPISANIE_VIZUALIZACII.md')
     fullfile('visualization', 'sobrat_dannye_demonstracii_roya.m')
     fullfile('visualization', 'podgotovit_dannye_vizualizacii.m')
     fullfile('visualization', 'postroit_scenu_roya_3d.m')
     fullfile('visualization', 'obnovit_kadr_roya.m')
     fullfile('visualization', 'postroit_grafiki_pokazatelei.m')
+    fullfile('visualization', 'postroit_grafiki_serii_opytov.m')
     fullfile('visualization', 'sohranit_kadr_roya.m')
     fullfile('visualization', 'sohranit_animaciyu_roya.m')
     fullfile('visualization', 'sohranit_otchet_demonstracii.m')
@@ -137,6 +151,8 @@ obyazatelnye_faily = {
     fullfile('bloki', 'sozdanie_modelei', ...
         'vypolnit_raschet_iz_simulink_stenda.m')
     fullfile('bloki', 'sozdanie_modelei', 'otkryt_model_stenda_roya.m')
+    fullfile('opyty', 'serii', 'OPISANIE_SERII_OPYTOV.md')
+    fullfile('opyty', 'serii', 'malaya_seriya_stroi_i_svyaz.json')
     };
 
 proverit_papki(koren_proekta, obyazatelnye_papki);
