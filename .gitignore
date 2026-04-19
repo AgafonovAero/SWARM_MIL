@@ -1,0 +1,7 @@
+bloki/generated/*.slx
+bloki/generated/*.slxp
+bloki/generated/*.mdl
+bloki/generated/*.asv
+bloki/generated/slprj/
+slprj/
+!bloki/generated/.gitkeep

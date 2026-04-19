@@ -6,7 +6,8 @@ import sys
 from pathlib import Path
 
 
-RAZRESHENNYE_RASSHIRENIYA = {".m", ".md", ".json"}
+RAZRESHENNYE_RASSHIRENIYA = {".m", ".md", ".json", ".py"}
+RAZRESHENNYE_IMENA_FAILOV = {".gitignore"}
 ZAPRESHENNYE_SIMVOLY = {
     0x0085: "нестандартный перевод строки",
     0x00AD: "мягкий перенос",
@@ -43,7 +44,7 @@ def main() -> int:
     for put_k_failu in sorted(Path(".").rglob("*")):
         if ".git" in put_k_failu.parts or not put_k_failu.is_file():
             continue
-        if put_k_failu.suffix.lower() not in RAZRESHENNYE_RASSHIRENIYA:
+        if not nuzhno_proverit_fail(put_k_failu):
             continue
 
         oshibki.extend(proverit_fail(put_k_failu))
@@ -54,6 +55,12 @@ def main() -> int:
 
     print("Проверка целостности текстовых файлов пройдена успешно.")
     return 0
+
+
+def nuzhno_proverit_fail(put_k_failu: Path) -> bool:
+    if put_k_failu.name in RAZRESHENNYE_IMENA_FAILOV:
+        return True
+    return put_k_failu.suffix.lower() in RAZRESHENNYE_RASSHIRENIYA
 
 
 def proverit_fail(put_k_failu: Path) -> list[str]:
@@ -72,7 +79,8 @@ def proverit_fail(put_k_failu: Path) -> list[str]:
     if nomer_cr != -1:
         stroka, simvol = poluchit_polozhenie_po_baitam(dannye, nomer_cr)
         oshibki.append(
-            f"{put_k_failu}:{stroka}:{simvol}: U+000D: обнаружен запрещенный возврат каретки"
+            f"{put_k_failu}:{stroka}:{simvol}: U+000D: "
+            "обнаружен запрещенный возврат каретки"
         )
 
     try:
@@ -85,18 +93,33 @@ def proverit_fail(put_k_failu: Path) -> list[str]:
     stroki = tekst.split("\n")
     for nomer_stroki, stroka in enumerate(stroki, 1):
         if put_k_failu.suffix.lower() == ".m":
-            oshibki.extend(proverit_stroku_matlab(put_k_failu, nomer_stroki, stroka))
+            oshibki.extend(
+                proverit_stroku_matlab(put_k_failu, nomer_stroki, stroka)
+            )
         elif put_k_failu.suffix.lower() == ".md":
-            oshibki.extend(proverit_stroku_markdown(put_k_failu, nomer_stroki, stroka))
+            oshibki.extend(
+                proverit_stroku_markdown(put_k_failu, nomer_stroki, stroka)
+            )
         elif put_k_failu.suffix.lower() == ".json":
-            oshibki.extend(proverit_stroku_json(put_k_failu, nomer_stroki, stroka))
+            oshibki.extend(
+                proverit_stroku_json(put_k_failu, nomer_stroki, stroka)
+            )
+        elif put_k_failu.suffix.lower() == ".py":
+            oshibki.extend(
+                proverit_stroku_python(put_k_failu, nomer_stroki, stroka)
+            )
+        elif put_k_failu.name == ".gitignore":
+            oshibki.extend(
+                proverit_stroku_gitignore(put_k_failu, nomer_stroki, stroka)
+            )
 
     if put_k_failu.suffix.lower() == ".json":
         try:
             json.loads(tekst)
         except json.JSONDecodeError as oshibka:
             oshibki.append(
-                f"{put_k_failu}:{oshibka.lineno}:{oshibka.colno}: JSON не разбирается: {oshibka.msg}"
+                f"{put_k_failu}:{oshibka.lineno}:{oshibka.colno}: "
+                f"JSON не разбирается: {oshibka.msg}"
             )
 
     return oshibki
@@ -124,7 +147,8 @@ def proverit_simvoly(put_k_failu: Path, tekst: str) -> list[str]:
 
         if prichina is not None:
             oshibki.append(
-                f"{put_k_failu}:{nomer_stroki}:{nomer_stolbca}: U+{kod:04X}: {prichina}"
+                f"{put_k_failu}:{nomer_stroki}:{nomer_stolbca}: "
+                f"U+{kod:04X}: {prichina}"
             )
 
         nomer_stolbca += 1
@@ -132,53 +156,89 @@ def proverit_simvoly(put_k_failu: Path, tekst: str) -> list[str]:
     return oshibki
 
 
-def proverit_stroku_matlab(put_k_failu: Path, nomer_stroki: int, stroka: str) -> list[str]:
+def proverit_stroku_matlab(
+    put_k_failu: Path, nomer_stroki: int, stroka: str
+) -> list[str]:
     oshibki: list[str] = []
     ochishchennaya = stroka.strip()
 
-    if stroka.strip() == "end function":
+    if ochishchennaya == "end function":
         oshibki.append(
             f"{put_k_failu}:{nomer_stroki}:1: строка end function запрещена"
         )
 
-    if ochishchennaya.startswith("function ") and not RE_FUNCTION_ALLOWED.match(ochishchennaya):
+    if ochishchennaya.startswith("function ") and not RE_FUNCTION_ALLOWED.match(
+        ochishchennaya
+    ):
         oshibki.append(
-            f"{put_k_failu}:{nomer_stroki}:1: объявление функции объединено с телом или записано неверно"
+            f"{put_k_failu}:{nomer_stroki}:1: "
+            "объявление функции объединено с телом или записано неверно"
         )
 
     if len(stroka) > 180 and not est_dopustimaya_dlinnaya_stroka(stroka):
         oshibki.append(
-            f"{put_k_failu}:{nomer_stroki}:1: строка MATLAB длиннее 180 символов"
+            f"{put_k_failu}:{nomer_stroki}:1: "
+            "строка MATLAB длиннее 180 символов"
         )
 
     return oshibki
 
 
-def proverit_stroku_markdown(put_k_failu: Path, nomer_stroki: int, stroka: str) -> list[str]:
+def proverit_stroku_markdown(
+    put_k_failu: Path, nomer_stroki: int, stroka: str
+) -> list[str]:
     oshibki: list[str] = []
 
     if RE_MD_MULTI_HEADING.search(stroka):
         oshibki.append(
-            f"{put_k_failu}:{nomer_stroki}:1: в одной строке Markdown обнаружено несколько заголовков"
+            f"{put_k_failu}:{nomer_stroki}:1: "
+            "в одной строке Markdown обнаружено несколько заголовков"
         )
 
     if RE_MD_MULTI_BULLET.search(stroka) or RE_MD_MULTI_NUMBER.search(stroka):
         oshibki.append(
-            f"{put_k_failu}:{nomer_stroki}:1: в одной строке Markdown обнаружено несколько пунктов списка"
+            f"{put_k_failu}:{nomer_stroki}:1: "
+            "в одной строке Markdown обнаружено несколько пунктов списка"
         )
 
     if len(stroka) > 240 and not est_dopustimaya_dlinnaya_stroka(stroka):
         oshibki.append(
-            f"{put_k_failu}:{nomer_stroki}:1: строка Markdown длиннее 240 символов"
+            f"{put_k_failu}:{nomer_stroki}:1: "
+            "строка Markdown длиннее 240 символов"
         )
 
     return oshibki
 
 
-def proverit_stroku_json(put_k_failu: Path, nomer_stroki: int, stroka: str) -> list[str]:
+def proverit_stroku_json(
+    put_k_failu: Path, nomer_stroki: int, stroka: str
+) -> list[str]:
     if len(stroka) > 240 and not est_dopustimaya_dlinnaya_stroka(stroka):
         return [
-            f"{put_k_failu}:{nomer_stroki}:1: строка JSON длиннее 240 символов"
+            f"{put_k_failu}:{nomer_stroki}:1: "
+            "строка JSON длиннее 240 символов"
+        ]
+    return []
+
+
+def proverit_stroku_python(
+    put_k_failu: Path, nomer_stroki: int, stroka: str
+) -> list[str]:
+    if len(stroka) > 180 and not est_dopustimaya_dlinnaya_stroka(stroka):
+        return [
+            f"{put_k_failu}:{nomer_stroki}:1: "
+            "строка Python длиннее 180 символов"
+        ]
+    return []
+
+
+def proverit_stroku_gitignore(
+    put_k_failu: Path, nomer_stroki: int, stroka: str
+) -> list[str]:
+    if len(stroka) > 240 and not est_dopustimaya_dlinnaya_stroka(stroka):
+        return [
+            f"{put_k_failu}:{nomer_stroki}:1: "
+            "строка .gitignore длиннее 240 символов"
         ]
     return []
 
@@ -192,7 +252,9 @@ def est_dopustimaya_dlinnaya_stroka(stroka: str) -> bool:
     )
 
 
-def poluchit_polozhenie_po_baitam(dannye: bytes, nomer_baita: int) -> tuple[int, int]:
+def poluchit_polozhenie_po_baitam(
+    dannye: bytes, nomer_baita: int
+) -> tuple[int, int]:
     chast = dannye[: nomer_baita + 1]
     stroka = chast.count(b"\n") + 1
     poslednyaya_stroka = chast.split(b"\n")[-1]
