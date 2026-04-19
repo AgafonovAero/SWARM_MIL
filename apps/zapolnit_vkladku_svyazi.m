@@ -1,0 +1,59 @@
+function elementy = zapolnit_vkladku_svyazi(vkladka, parametry_svyazi)
+if nargin < 2 || ~isstruct(parametry_svyazi)
+    error('%s', 'Для заполнения вкладки связи требуются параметры связи.');
+end
+
+maket = uigridlayout(vkladka, [10, 2]);
+maket.RowHeight = repmat({30}, 1, 9);
+maket.RowHeight{10} = '1x';
+maket.ColumnWidth = {280, '1x'};
+maket.Padding = [10, 10, 10, 10];
+
+elementy = struct();
+elementy.maket = maket;
+elementy.maksimalnaya_dalnost = sozdat_chislovoe_pole( ...
+    maket, 1, 'Максимальная дальность связи, м', ...
+    parametry_svyazi.maksimalnaya_dalnost_m);
+elementy.porog_signal_shum = sozdat_chislovoe_pole( ...
+    maket, 2, 'Порог отношения сигнал/шум', ...
+    parametry_svyazi.porog_otnosheniya_signal_shum);
+elementy.moshchnost_peredatchika = sozdat_chislovoe_pole( ...
+    maket, 3, 'Мощность передатчика, Вт', ...
+    parametry_svyazi.moshchnost_peredatchika_vt);
+elementy.moshchnost_shuma = sozdat_chislovoe_pole( ...
+    maket, 4, 'Мощность шума, Вт', ...
+    parametry_svyazi.moshchnost_shuma_vt);
+elementy.polosa_chastot = sozdat_chislovoe_pole( ...
+    maket, 5, 'Полоса частот, Гц', ...
+    parametry_svyazi.polosa_chastot_gts);
+elementy.razmer_soobshcheniya = sozdat_chislovoe_pole( ...
+    maket, 6, 'Размер сообщения, бит', ...
+    parametry_svyazi.razmer_soobshcheniya_bit);
+elementy.ves_propusknoi_sposobnosti = sozdat_chislovoe_pole( ...
+    maket, 7, 'Вес пропускной способности', ...
+    parametry_svyazi.ves_propusknoi_sposobnosti);
+elementy.ves_dlitelnosti_svyazi = sozdat_chislovoe_pole( ...
+    maket, 8, 'Вес длительности связи', ...
+    parametry_svyazi.ves_dlitelnosti_svyazi);
+elementy.ves_energeticheskoi_stoimosti = sozdat_chislovoe_pole( ...
+    maket, 9, 'Вес энергетической стоимости', ...
+    parametry_svyazi.ves_energeticheskoi_stoimosti);
+
+knopka_po_umolchaniyu = uibutton(maket, 'push');
+knopka_po_umolchaniyu.Layout.Row = 10;
+knopka_po_umolchaniyu.Layout.Column = [1, 2];
+knopka_po_umolchaniyu.Text = 'Вернуть значения по умолчанию';
+elementy.knopka_po_umolchaniyu = knopka_po_umolchaniyu;
+end
+
+function pole = sozdat_chislovoe_pole(maket, nomer_stroki, nadpis, znachenie)
+nadpis_pole = uilabel(maket);
+nadpis_pole.Text = nadpis;
+nadpis_pole.Layout.Row = nomer_stroki;
+nadpis_pole.Layout.Column = 1;
+
+pole = uieditfield(maket, 'numeric');
+pole.Layout.Row = nomer_stroki;
+pole.Layout.Column = 2;
+pole.Value = double(znachenie);
+end

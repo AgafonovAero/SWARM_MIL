@@ -9,10 +9,12 @@ addpath(fullfile(koren_proekta, 'raschet', 'zveno'));
 addpath(fullfile(koren_proekta, 'raschet', 'peredacha'));
 addpath(fullfile(koren_proekta, 'raschet', 'scenarii'));
 addpath(fullfile(koren_proekta, 'visualization'));
+addpath(fullfile(koren_proekta, 'apps'));
 addpath(fullfile(koren_proekta, 'proverki', 'edinichnye'));
 
 try
-    soobshchenie('Начат запуск проверок этапов 0, 1, 2, 3, 4, 5, 6 и 7.');
+    soobshchenie( ...
+        'Начат запуск проверок этапов 0, 1, 2, 3, 4, 5, 6, 7 и 8.');
 
     proverka_struktury_proekta(koren_proekta);
     proverit_zapis_v_rezultaty(koren_proekta);
@@ -43,9 +45,11 @@ try
 
     proverka_vizualizacii_etapa_7(koren_proekta);
     soobshchenie('Проверки этапа 7 завершены успешно');
+
+    proverka_pulta_etapa_8(koren_proekta);
+    soobshchenie('Проверки этапа 8 завершены успешно');
 catch oshibka_proverki
-    soobshchenie( ...
-        sprintf( ...
+    soobshchenie(sprintf( ...
         'Проверки проекта завершены с ошибкой: %s', ...
         oshibka_proverki.message), ...
         'oshibka');
@@ -63,7 +67,8 @@ put_k_failu = fullfile(papka_rezultatov, imya_vremennogo_faila);
 if identifikator == -1
     error('%s', sprintf( ...
         'Нет возможности записи в папку результатов %s. Причина: %s', ...
-        papka_rezultatov, tekst_oshibki));
+        papka_rezultatov, ...
+        tekst_oshibki));
 end
 
 ochistka_faila = onCleanup(@() bezopasno_zakryt_fail(identifikator));
@@ -80,8 +85,11 @@ try
     delete(put_k_failu);
 catch oshibka_udaleniya
     error('%s', sprintf( ...
-        'Не удалось удалить временный файл проверки записи: %s.%sПричина: %s', ...
-        put_k_failu, newline, oshibka_udaleniya.message));
+        ['Не удалось удалить временный файл проверки записи: %s.%s' ...
+        'Причина: %s'], ...
+        put_k_failu, ...
+        newline, ...
+        oshibka_udaleniya.message));
 end
 
 if isfile(put_k_failu)
