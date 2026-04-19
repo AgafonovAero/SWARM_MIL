@@ -3,13 +3,14 @@ if nargin < 1 || strlength(string(koren_proekta)) == 0
     error('%s', 'Не задан корень проекта для проверки физического формата текстов.');
 end
 
-rasshireniya = {'.m', '.md', '.json'};
-spisok_failov = poluchit_spisok_failov(koren_proekta, rasshireniya);
+spisok_failov = poluchit_spisok_failov(koren_proekta, {'.m', '.md', '.json'});
 
 for nomer_faila = 1:numel(spisok_failov)
     put_k_failu = spisok_failov{nomer_faila};
     [~, ~, rasshirenie] = fileparts(put_k_failu);
+
     proverit_nepustoi_fail(put_k_failu);
+    proverit_standartnye_razdeliteli_strok(put_k_failu);
 
     switch lower(rasshirenie)
         case '.m'
@@ -20,7 +21,7 @@ for nomer_faila = 1:numel(spisok_failov)
             proverit_json_fail(put_k_failu);
         otherwise
             error('%s', sprintf( ...
-                'Обнаружено неподдерживаемое расширение файла при проверке формата: %s', ...
+                'Обнаружено неподдерживаемое расширение файла: %s', ...
                 put_k_failu));
     end
 end
@@ -46,91 +47,101 @@ spisok_failov = sort(unique(spisok_failov));
 end
 
 function proverit_nepustoi_fail(put_k_failu)
-tekst = fileread(put_k_failu);
+baity = prochitat_baity(put_k_failu);
+if isempty(baity)
+    vyzvat_oshibku_formata(put_k_failu, 1, 'Файл пустой.');
+end
 
-if strlength(string(tekst)) == 0 || strlength(strtrim(string(tekst))) == 0
+try
+    tekst = native2unicode(baity.', 'UTF-8');
+catch oshibka_dekodirovaniya
     error('%s', sprintf( ...
-        'Файл пустой или содержит только пробельные символы: %s', ...
-        put_k_failu));
+        'Файл %s не удалось декодировать как UTF-8. Причина: %s', ...
+        put_k_failu, oshibka_dekodirovaniya.message));
+end
+
+if strlength(strtrim(string(tekst))) == 0
+    vyzvat_oshibku_formata( ...
+        put_k_failu, 1, ...
+        'Файл пустой или содержит только пробельные символы.');
+end
+end
+
+function proverit_standartnye_razdeliteli_strok(put_k_failu)
+baity = prochitat_baity(put_k_failu);
+if any(baity == 13)
+    nomer_stroki = 1 + sum(baity(1:find(baity == 13, 1, 'first')) == 10);
+    vyzvat_oshibku_formata( ...
+        put_k_failu, nomer_stroki, ...
+        'Обнаружен запрещенный возврат каретки. Допустим только LF.');
 end
 end
 
 function proverit_matlab_fail(put_k_failu)
-stroki = prochitat_stroki(put_k_failu);
+stroki = prochitat_stroki_lf(put_k_failu);
 
 for nomer_stroki = 1:numel(stroki)
     stroka = stroki{nomer_stroki};
+    ochishchennaya_stroka = strtrim(stroka);
 
-    zapreshennaya_konstrukciya = ['^end' ' function$'];
-    if ~isempty(regexp(strtrim(stroka), zapreshennaya_konstrukciya, 'once'))
+    if ~isempty(regexp(ochishchennaya_stroka, '^end\s+function$', 'once'))
         vyzvat_oshibku_formata( ...
-            put_k_failu, ...
-            nomer_stroki, ...
-            'в MATLAB-файле запрещена строка завершения функции в неверном виде');
+            put_k_failu, nomer_stroki, ...
+            'В MATLAB-файле запрещена строка с неверным завершением функции.');
     end
 
-    if startsWith(strtrim(stroka), 'function ') ...
-            && ~stroka_yavlyaetsya_korrektnym_obyavleniem_funkcii(stroka)
+    if startsWith(ochishchennaya_stroka, 'function ') ...
+            && ~stroka_yavlyaetsya_korrektnym_obyavleniem_funkcii(ochishchennaya_stroka)
         vyzvat_oshibku_formata( ...
-            put_k_failu, ...
-            nomer_stroki, ...
-            'объявление функции записано в неверном формате или объединено с телом функции');
+            put_k_failu, nomer_stroki, ...
+            'Объявление функции объединено с телом или записано в неверном виде.');
     end
 
-    if strlength(string(stroka)) > 180 && ~razreshena_dlinnaya_stroka_m(stroka)
+    if strlength(string(stroka)) > 180 && ~razreshena_dlinnaya_stroka(stroka)
         vyzvat_oshibku_formata( ...
-            put_k_failu, ...
-            nomer_stroki, ...
-            'длина строки MATLAB превышает 180 символов');
+            put_k_failu, nomer_stroki, ...
+            'Длина строки MATLAB превышает 180 символов.');
     end
 end
 end
 
 function proverit_markdown_fail(put_k_failu)
-stroki = prochitat_stroki(put_k_failu);
+stroki = prochitat_stroki_lf(put_k_failu);
 
 for nomer_stroki = 1:numel(stroki)
     stroka = stroki{nomer_stroki};
 
-    if isempty(stroka)
-        continue
-    end
-
     if est_neskolko_zagolovkov_v_odnoi_stroke(stroka)
         vyzvat_oshibku_formata( ...
-            put_k_failu, ...
-            nomer_stroki, ...
-            'в строке Markdown обнаружено несколько заголовков');
+            put_k_failu, nomer_stroki, ...
+            'В строке Markdown обнаружено несколько заголовков.');
     end
 
     if est_neskolko_punktov_spiska_v_odnoi_stroke(stroka)
         vyzvat_oshibku_formata( ...
-            put_k_failu, ...
-            nomer_stroki, ...
-            'в строке Markdown обнаружено несколько пунктов списка');
+            put_k_failu, nomer_stroki, ...
+            'В строке Markdown обнаружено несколько пунктов списка.');
     end
 
-    if strlength(string(stroka)) > 240 && ~razreshena_dlinnaya_stroka_markdown(stroka)
+    if strlength(string(stroka)) > 240 && ~razreshena_dlinnaya_stroka(stroka)
         vyzvat_oshibku_formata( ...
-            put_k_failu, ...
-            nomer_stroki, ...
-            'длина строки Markdown превышает 240 символов');
+            put_k_failu, nomer_stroki, ...
+            'Длина строки Markdown превышает 240 символов.');
     end
 end
 end
 
 function proverit_json_fail(put_k_failu)
-tekst = fileread(put_k_failu);
-stroki = prochitat_stroki(put_k_failu);
+baity = prochitat_baity(put_k_failu);
+tekst = native2unicode(baity.', 'UTF-8');
+stroki = prochitat_stroki_lf(put_k_failu);
 
 for nomer_stroki = 1:numel(stroki)
     stroka = stroki{nomer_stroki};
-
-    if strlength(string(stroka)) > 240
+    if strlength(string(stroka)) > 240 && ~razreshena_dlinnaya_stroka(stroka)
         vyzvat_oshibku_formata( ...
-            put_k_failu, ...
-            nomer_stroki, ...
-            'длина строки JSON превышает 240 символов');
+            put_k_failu, nomer_stroki, ...
+            'Длина строки JSON превышает 240 символов.');
     end
 end
 
@@ -143,17 +154,16 @@ catch oshibka_razbora
 end
 end
 
-function stroki = prochitat_stroki(put_k_failu)
-tekst = fileread(put_k_failu);
-stroki = regexp(tekst, '\r\n|\n|\r', 'split');
+function stroki = prochitat_stroki_lf(put_k_failu)
+baity = prochitat_baity(put_k_failu);
+tekst = native2unicode(baity.', 'UTF-8');
+stroki = regexp(tekst, '\n', 'split');
 end
 
 function rezultat = stroka_yavlyaetsya_korrektnym_obyavleniem_funkcii(stroka)
-stroka = strtrim(stroka);
 shablony = {
-    '^function\s+[A-Za-z]\w*\s*\(\s*[^)]*\s*\)\s*$'
-    '^function\s+(?:\[[^\]]+\]|[A-Za-z]\w*)\s*=\s*[A-Za-z]\w*\s*\(\s*[^)]*\s*\)\s*$'
-    '^function\s+(?:\[[^\]]+\]|[A-Za-z]\w*)\s*=\s*[A-Za-z]\w*\s*$'
+    '^function\s+[A-Za-z]\w*\s*(\([^)]*\))?\s*$'
+    '^function\s+(?:\[[^\]]+\]|[A-Za-z]\w*)\s*=\s*[A-Za-z]\w*\s*(\([^)]*\))?\s*$'
     };
 
 rezultat = false;
@@ -170,19 +180,12 @@ rezultat = ~isempty(regexp(stroka, '^#{1,6}\s+.*\s+#{1,6}\s+', 'once'));
 end
 
 function rezultat = est_neskolko_punktov_spiska_v_odnoi_stroke(stroka)
-shablon_nachala_spiska = '^\s*(?:[-*+]\s+|\d+\.\s+)';
-shablon_vtorogo_punkta = '\s{2,}(?:[-*+]\s+|\d+\.\s+)';
-
 rezultat = ...
-    ~isempty(regexp(stroka, shablon_nachala_spiska, 'once')) && ...
-    ~isempty(regexp(stroka, shablon_vtorogo_punkta, 'once'));
+    ~isempty(regexp(stroka, '^\s*[-*+]\s+.+\s{2,}[-*+]\s+\S', 'once')) ...
+    || ~isempty(regexp(stroka, '^\s*\d+\.\s+.+\s{2,}\d+\.\s+\S', 'once'));
 end
 
-function rezultat = razreshena_dlinnaya_stroka_m(stroka)
-rezultat = contains(stroka, 'http://') || contains(stroka, 'https://');
-end
-
-function rezultat = razreshena_dlinnaya_stroka_markdown(stroka)
+function rezultat = razreshena_dlinnaya_stroka(stroka)
 rezultat = ...
     contains(stroka, 'http://') || ...
     contains(stroka, 'https://') || ...
@@ -190,8 +193,21 @@ rezultat = ...
     ~isempty(regexp(stroka, '(^|[\s(])/[^\s]+', 'once'));
 end
 
+function baity = prochitat_baity(put_k_failu)
+identifikator = fopen(put_k_failu, 'rb');
+if identifikator == -1
+    error('%s', sprintf( ...
+        'Не удалось открыть файл для проверки физического формата: %s', ...
+        put_k_failu));
+end
+
+ochistka = onCleanup(@() fclose(identifikator));
+baity = fread(identifikator, Inf, '*uint8');
+clear ochistka
+end
+
 function vyzvat_oshibku_formata(put_k_failu, nomer_stroki, prichina)
 error('%s', sprintf( ...
-    'Нарушен физический формат текстового файла %s. Строка: %d. Причина: %s.', ...
+    'Нарушен физический формат файла %s. Строка: %d. Причина: %s', ...
     put_k_failu, nomer_stroki, prichina));
 end

@@ -1,15 +1,14 @@
 function proverka_skrytyh_znakov(koren_proekta)
-spisok_failov = poluchit_spisok_tekstovyh_failov( ...
-    koren_proekta, {'.m', '.md', '.json'});
+spisok_failov = poluchit_spisok_failov(koren_proekta, {'.m', '.md', '.json'});
 
 for nomer_faila = 1:numel(spisok_failov)
-    proverit_fail_na_skrytye_znaki(spisok_failov{nomer_faila});
+    proverit_fail(spisok_failov{nomer_faila});
 end
 
 soobshchenie('Скрытые управляющие знаки в текстовых файлах проекта не обнаружены.');
 end
 
-function spisok_failov = poluchit_spisok_tekstovyh_failov(koren_proekta, rasshireniya)
+function spisok_failov = poluchit_spisok_failov(koren_proekta, rasshireniya)
 spisok_failov = {};
 
 for nomer_rasshireniya = 1:numel(rasshireniya)
@@ -26,32 +25,39 @@ end
 spisok_failov = sort(unique(spisok_failov));
 end
 
-function proverit_fail_na_skrytye_znaki(put_k_failu)
+function proverit_fail(put_k_failu)
 baity = prochitat_baity(put_k_failu);
-tekst = native2unicode(baity.', 'UTF-8');
-kody_simvolov = double(tekst);
-est_bom_v_nachale = est_dopustimyi_bom_v_nachale(baity, kody_simvolov);
+proverit_otsutstvie_bom(baity, put_k_failu);
 
+try
+    tekst = native2unicode(baity.', 'UTF-8');
+catch oshibka_dekodirovaniya
+    error('%s', sprintf( ...
+        'Файл %s не удалось декодировать как UTF-8. Причина: %s', ...
+        put_k_failu, oshibka_dekodirovaniya.message));
+end
+
+kody_simvolov = double(tekst);
 for nomer_simvola = 1:numel(kody_simvolov)
     kod_simvola = kody_simvolov(nomer_simvola);
 
-    if kod_simvola == hex2dec('FEFF') && nomer_simvola == 1 && est_bom_v_nachale
-        continue
+    if kod_simvola == 13
+        vyzvat_oshibku_znaka( ...
+            put_k_failu, nomer_simvola, kod_simvola, ...
+            'Обнаружен запрещенный возврат каретки.');
     end
 
-    if ~yavlyaetsya_skrytym_znakom(kod_simvola)
-        continue
+    if any(kod_simvola == [hex2dec('0085'), hex2dec('2028'), hex2dec('2029')])
+        vyzvat_oshibku_znaka( ...
+            put_k_failu, nomer_simvola, kod_simvola, ...
+            'Обнаружен нестандартный разделитель строк.');
     end
 
-    error('%s', sprintf([ ...
-        'Обнаружен скрытый управляющий знак в файле %s.%s' ...
-        'Номер символа: %d.%s' ...
-        'Код знака: U+%04X.%s' ...
-        'Название: %s.'], ...
-        put_k_failu, newline, ...
-        nomer_simvola, newline, ...
-        kod_simvola, newline, ...
-        nazvanie_znaka(kod_simvola)));
+    if yavlyaetsya_zapreshchennym_simvolom(kod_simvola)
+        vyzvat_oshibku_znaka( ...
+            put_k_failu, nomer_simvola, kod_simvola, ...
+            'Обнаружен скрытый управляющий знак.');
+    end
 end
 end
 
@@ -68,14 +74,15 @@ baity = fread(identifikator, Inf, '*uint8');
 clear ochistka
 end
 
-function rezultat = est_dopustimyi_bom_v_nachale(baity, kody_simvolov)
-rezultat = numel(baity) >= 3 ...
-    && isequal(baity(1:3).', [239 187 191]) ...
-    && ~isempty(kody_simvolov) ...
-    && kody_simvolov(1) == hex2dec('FEFF');
+function proverit_otsutstvie_bom(baity, put_k_failu)
+if numel(baity) >= 3 && isequal(baity(1:3).', [239 187 191])
+    vyzvat_oshibku_znaka( ...
+        put_k_failu, 1, hex2dec('FEFF'), ...
+        'Обнаружен запрещенный знак порядка байтов в начале файла.');
+end
 end
 
-function rezultat = yavlyaetsya_skrytym_znakom(kod_simvola)
+function rezultat = yavlyaetsya_zapreshchennym_simvolom(kod_simvola)
 zapreshennye_kody = [ ...
     hex2dec('00AD') ...
     hex2dec('061C') ...
@@ -96,47 +103,71 @@ zapreshennye_kody = [ ...
     hex2dec('FEFF')];
 
 rezultat = ismember(kod_simvola, zapreshennye_kody) ...
-    || ((kod_simvola >= 0 && kod_simvola <= 31) && ~ismember(kod_simvola, [9 10 13])) ...
+    || ((kod_simvola >= 0 && kod_simvola <= 31) && ~ismember(kod_simvola, [9 10])) ...
     || (kod_simvola >= 127 && kod_simvola <= 159);
 end
 
-function imya = nazvanie_znaka(kod_simvola)
+function vyzvat_oshibku_znaka(put_k_failu, nomer_simvola, kod_simvola, prichina)
+error('%s', sprintf([ ...
+    '%s%s' ...
+    'Файл: %s.%s' ...
+    'Номер символа: %d.%s' ...
+    'Код знака: U+%04X.%s' ...
+    'Название: %s.'], ...
+    prichina, newline, ...
+    put_k_failu, newline, ...
+    nomer_simvola, newline, ...
+    kod_simvola, newline, ...
+    poluchit_nazvanie_znaka(kod_simvola)));
+end
+
+function nazvanie_znaka = poluchit_nazvanie_znaka(kod_simvola)
 switch kod_simvola
+    case 9
+        nazvanie_znaka = 'символ табуляции';
+    case 13
+        nazvanie_znaka = 'возврат каретки';
+    case hex2dec('0085')
+        nazvanie_znaka = 'нестандартный перевод строки';
     case hex2dec('00AD')
-        imya = 'мягкий перенос';
+        nazvanie_znaka = 'мягкий перенос';
     case hex2dec('061C')
-        imya = 'арабская метка направления письма';
+        nazvanie_znaka = 'арабская метка направления письма';
     case hex2dec('200B')
-        imya = 'невидимый пробел';
+        nazvanie_znaka = 'невидимый пробел';
     case hex2dec('200C')
-        imya = 'нулевой знак без соединения';
+        nazvanie_znaka = 'нулевой знак без соединения';
     case hex2dec('200D')
-        imya = 'нулевой знак соединения';
+        nazvanie_znaka = 'нулевой знак соединения';
     case hex2dec('200E')
-        imya = 'знак направления письма слева направо';
+        nazvanie_znaka = 'знак направления письма слева направо';
     case hex2dec('200F')
-        imya = 'знак направления письма справа налево';
+        nazvanie_znaka = 'знак направления письма справа налево';
+    case hex2dec('2028')
+        nazvanie_znaka = 'разделитель строк';
+    case hex2dec('2029')
+        nazvanie_znaka = 'разделитель абзацев';
     case hex2dec('202A')
-        imya = 'встраивание направления слева направо';
+        nazvanie_znaka = 'встраивание направления слева направо';
     case hex2dec('202B')
-        imya = 'встраивание направления справа налево';
+        nazvanie_znaka = 'встраивание направления справа налево';
     case hex2dec('202C')
-        imya = 'снятие встраивания направления';
+        nazvanie_znaka = 'снятие встраивания направления';
     case hex2dec('202D')
-        imya = 'переопределение направления слева направо';
+        nazvanie_znaka = 'переопределение направления слева направо';
     case hex2dec('202E')
-        imya = 'переопределение направления справа налево';
+        nazvanie_znaka = 'переопределение направления справа налево';
     case hex2dec('2066')
-        imya = 'изолятор направления слева направо';
+        nazvanie_znaka = 'изолятор направления слева направо';
     case hex2dec('2067')
-        imya = 'изолятор направления справа налево';
+        nazvanie_znaka = 'изолятор направления справа налево';
     case hex2dec('2068')
-        imya = 'изолятор сильного направления';
+        nazvanie_znaka = 'изолятор сильного направления';
     case hex2dec('2069')
-        imya = 'завершение изоляции направления';
+        nazvanie_znaka = 'завершение изоляции направления';
     case hex2dec('FEFF')
-        imya = 'знак порядка байтов';
+        nazvanie_znaka = 'знак порядка байтов';
     otherwise
-        imya = 'прочий скрытый управляющий знак';
+        nazvanie_znaka = 'прочий управляющий символ';
 end
 end
