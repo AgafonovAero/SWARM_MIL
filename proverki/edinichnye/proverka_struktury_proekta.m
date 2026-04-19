@@ -18,6 +18,8 @@ obyazatelnye_papki = {
     fullfile('raschet', 'otsenka')
     fullfile('raschet', 'scenarii')
     'visualization'
+    'bloki'
+    fullfile('bloki', 'generated')
     fullfile('bloki', 'sozdanie_modelei')
     fullfile('bloki', 'modeli')
     fullfile('opyty', 'scenarii')
@@ -32,6 +34,7 @@ obyazatelnye_papki = {
     };
 
 obyazatelnye_faily = {
+    '.gitignore'
     'README.md'
     'OPISANIE.md'
     'TEHNICHESKOE_ZADANIE.md'
@@ -41,6 +44,7 @@ obyazatelnye_faily = {
     'zapusk_proverok.m'
     'zapusk_demonstratora_roya.m'
     'zapusk_pulta_issledovatelya.m'
+    'zapusk_simulink_stenda_roya.m'
     fullfile('istochniki', 'perechen_istochnikov.md')
     fullfile('opyty', 'scenarii', 'OPISANIE_SCENARIEV.md')
     fullfile('opyty', 'scenarii', 'shema_scenariya.json')
@@ -48,7 +52,8 @@ obyazatelnye_faily = {
     fullfile('proverki', 'edinichnye', 'proverka_dokumentov_etapa_1.m')
     fullfile('proverki', 'edinichnye', 'proverka_dokumentov_etapa_2.m')
     fullfile('proverki', 'edinichnye', 'proverka_skrytyh_znakov.m')
-    fullfile('proverki', 'edinichnye', 'proverka_fizicheskogo_formata_tekstov.m')
+    fullfile('proverki', 'edinichnye', ...
+        'proverka_fizicheskogo_formata_tekstov.m')
     fullfile('proverki', 'edinichnye', 'proverka_razmetki_markdown.m')
     fullfile('proverki', 'edinichnye', 'proverka_scenariev_etapa_2.m')
     fullfile('proverki', 'edinichnye', 'proverka_kinematiki_etapa_3.m')
@@ -57,6 +62,8 @@ obyazatelnye_faily = {
     fullfile('proverki', 'edinichnye', 'proverka_peredachi_etapa_6.m')
     fullfile('proverki', 'edinichnye', 'proverka_vizualizacii_etapa_7.m')
     fullfile('proverki', 'edinichnye', 'proverka_pulta_etapa_8.m')
+    fullfile('proverki', 'edinichnye', ...
+        'proverka_simulink_stenda_etapa_9.m')
     fullfile('raschet', 'otsenka', 'soobshchenie.m')
     fullfile('raschet', 'bvs', 'OPISANIE_KINEMATIKI.md')
     fullfile('raschet', 'bvs', 'sozdat_sostoyanie_bvs_iz_scenariya.m')
@@ -83,7 +90,8 @@ obyazatelnye_faily = {
     fullfile('raschet', 'zveno', 'otsenit_zvenya.m')
     fullfile('raschet', 'zveno', 'raschet_zvenev_po_svyaznosti.m')
     fullfile('raschet', 'peredacha', 'OPISANIE_PEREDACHI.md')
-    fullfile('raschet', 'peredacha', 'parametry_peredachi_po_umolchaniyu.m')
+    fullfile('raschet', 'peredacha', ...
+        'parametry_peredachi_po_umolchaniyu.m')
     fullfile('raschet', 'peredacha', 'proverit_parametry_peredachi.m')
     fullfile('raschet', 'peredacha', 'sozdat_soobshchenie.m')
     fullfile('raschet', 'peredacha', 'sozdat_nachalnye_soobshcheniya.m')
@@ -122,6 +130,13 @@ obyazatelnye_faily = {
     fullfile('apps', 'poluchit_parametry_iz_pulta.m')
     fullfile('apps', 'proverit_parametry_pulta.m')
     fullfile('apps', 'dobavit_zapis_v_zhurnal_pulta.m')
+    fullfile('bloki', 'OPISANIE_SIMULINK_STENDA.md')
+    fullfile('bloki', 'sozdanie_modelei', 'sozdat_model_stenda_roya.m')
+    fullfile('bloki', 'sozdanie_modelei', ...
+        'podgotovit_parametry_simulink_stenda.m')
+    fullfile('bloki', 'sozdanie_modelei', ...
+        'vypolnit_raschet_iz_simulink_stenda.m')
+    fullfile('bloki', 'sozdanie_modelei', 'otkryt_model_stenda_roya.m')
     };
 
 proverit_papki(koren_proekta, obyazatelnye_papki);
