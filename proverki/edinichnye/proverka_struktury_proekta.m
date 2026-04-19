@@ -14,6 +14,7 @@ obyazatelnye_papki = {
     fullfile('raschet', 'zveno')
     fullfile('raschet', 'peredacha')
     fullfile('raschet', 'opyty')
+    fullfile('raschet', 'resursy')
     fullfile('raschet', 'upravlenie')
     fullfile('raschet', 'obuchenie')
     fullfile('raschet', 'otsenka')
@@ -40,6 +41,7 @@ obyazatelnye_faily = {
     '.gitignore'
     'README.md'
     'OPISANIE.md'
+    'PLAN_RAZVITIYA_PROEKTA.md'
     'TEHNICHESKOE_ZADANIE.md'
     'SLOVAR_TERMINOV.md'
     'ZHURNAL_DOPUSCHENII.md'
@@ -69,6 +71,8 @@ obyazatelnye_faily = {
         'proverka_simulink_stenda_etapa_9.m')
     fullfile('proverki', 'edinichnye', ...
         'proverka_serii_opytov_etapa_10.m')
+    fullfile('proverki', 'edinichnye', ...
+        'proverka_resursov_etapa_11.m')
     fullfile('raschet', 'otsenka', 'soobshchenie.m')
     fullfile('raschet', 'bvs', 'OPISANIE_KINEMATIKI.md')
     fullfile('raschet', 'bvs', 'sozdat_sostoyanie_bvs_iz_scenariya.m')
@@ -114,6 +118,16 @@ obyazatelnye_faily = {
     fullfile('raschet', 'opyty', 'vypolnit_seriyu_opytov.m')
     fullfile('raschet', 'opyty', 'sravnit_rezultaty_serii.m')
     fullfile('raschet', 'opyty', 'sohranit_rezultaty_serii.m')
+    fullfile('raschet', 'resursy', 'OPISANIE_RESURSOV.md')
+    fullfile('raschet', 'resursy', 'parametry_resursov_po_umolchaniyu.m')
+    fullfile('raschet', 'resursy', 'proverit_parametry_resursov.m')
+    fullfile('raschet', 'resursy', 'sozdat_sostoyanie_resursov_bvs.m')
+    fullfile('raschet', 'resursy', 'raschet_energii_dvizheniya.m')
+    fullfile('raschet', 'resursy', 'raschet_resursov_peredachi.m')
+    fullfile('raschet', 'resursy', 'raschet_nagruzki_golovnyh_bvs.m')
+    fullfile('raschet', 'resursy', 'raschet_resursov_po_opytu.m')
+    fullfile('raschet', 'resursy', 'izvlech_pokazateli_resursov.m')
+    fullfile('raschet', 'resursy', 'raschet_resursov_po_serii.m')
     fullfile('visualization', 'OPISANIE_VIZUALIZACII.md')
     fullfile('visualization', 'sobrat_dannye_demonstracii_roya.m')
     fullfile('visualization', 'podgotovit_dannye_vizualizacii.m')
@@ -121,6 +135,7 @@ obyazatelnye_faily = {
     fullfile('visualization', 'obnovit_kadr_roya.m')
     fullfile('visualization', 'postroit_grafiki_pokazatelei.m')
     fullfile('visualization', 'postroit_grafiki_serii_opytov.m')
+    fullfile('visualization', 'postroit_grafiki_resursov.m')
     fullfile('visualization', 'sohranit_kadr_roya.m')
     fullfile('visualization', 'sohranit_animaciyu_roya.m')
     fullfile('visualization', 'sohranit_otchet_demonstracii.m')

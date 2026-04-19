@@ -8,6 +8,7 @@ addpath(fullfile(koren_proekta, 'raschet', 'svyaz'));
 addpath(fullfile(koren_proekta, 'raschet', 'zveno'));
 addpath(fullfile(koren_proekta, 'raschet', 'peredacha'));
 addpath(fullfile(koren_proekta, 'raschet', 'opyty'));
+addpath(fullfile(koren_proekta, 'raschet', 'resursy'));
 addpath(fullfile(koren_proekta, 'raschet', 'scenarii'));
 addpath(fullfile(koren_proekta, 'visualization'));
 addpath(fullfile(koren_proekta, 'apps'));
@@ -16,7 +17,8 @@ addpath(fullfile(koren_proekta, 'proverki', 'edinichnye'));
 
 try
     soobshchenie([ ...
-        'Начат запуск проверок этапов 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 и 10.' ...
+        'Начат запуск проверок этапов 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ' ...
+        '10 и 11.' ...
         ]);
 
     proverka_struktury_proekta(koren_proekta);
@@ -57,6 +59,9 @@ try
 
     proverka_serii_opytov_etapa_10(koren_proekta);
     soobshchenie('Проверки этапа 10 завершены успешно');
+
+    proverka_resursov_etapa_11(koren_proekta);
+    soobshchenie('Проверки этапа 11 завершены успешно');
 catch oshibka_proverki
     soobshchenie(sprintf( ...
         'Проверки проекта завершены с ошибкой: %s', ...
