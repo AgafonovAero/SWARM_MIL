@@ -144,7 +144,7 @@ end
 end
 
 function baity = prochitat_baity(put_k_failu)
-identifikator = fopen(put_k_failu, 'r');
+identifikator = fopen(put_k_failu, 'rb');
 if identifikator == -1
     error('%s', sprintf('Не удалось открыть файл Markdown: %s', put_k_failu));
 end
@@ -156,7 +156,10 @@ end
 function rezultat = yavlyaetsya_skrytym_znakom(kod_simvola)
 zapreshennye_kody = [ ...
     hex2dec('00AD') ...
+    hex2dec('061C') ...
     hex2dec('200B') ...
+    hex2dec('200C') ...
+    hex2dec('200D') ...
     hex2dec('200E') ...
     hex2dec('200F') ...
     hex2dec('202A') ...
@@ -179,8 +182,14 @@ function imya = nazvanie_znaka(kod_simvola)
 switch kod_simvola
     case hex2dec('00AD')
         imya = 'мягкий перенос';
+    case hex2dec('061C')
+        imya = 'арабская метка направления письма';
     case hex2dec('200B')
         imya = 'невидимый пробел';
+    case hex2dec('200C')
+        imya = 'нулевой знак без соединения';
+    case hex2dec('200D')
+        imya = 'нулевой знак соединения';
     case hex2dec('200E')
         imya = 'знак направления письма слева направо';
     case hex2dec('200F')

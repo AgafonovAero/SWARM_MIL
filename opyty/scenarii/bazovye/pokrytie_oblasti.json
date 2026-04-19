@@ -1,0 +1,134 @@
+{
+  "id_scenariya": "pokrytie_oblasti",
+  "nazvanie": "Покрытие области для будущей оценки распределения роя",
+  "opisanie": "Сценарий задает рой из десяти БВС и область интереса для будущей проверки равномерного покрытия.",
+  "nachalnoe_chislo": 202,
+  "vremya_modelirovaniya": 180.0,
+  "shag_modelirovaniya": 1.0,
+  "oblast_poleta": {
+    "xmin": 0.0,
+    "xmax": 1200.0,
+    "ymin": 0.0,
+    "ymax": 800.0,
+    "zmin": 0.0,
+    "zmax": 250.0
+  },
+  "sostav_roya": [
+    {
+      "id_bvs": "bvs_01",
+      "rol": "vedushchii",
+      "nachalnoe_polozhenie": [150.0, 150.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 1.0
+    },
+    {
+      "id_bvs": "bvs_02",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [180.0, 180.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_03",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [210.0, 210.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_04",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [240.0, 240.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_05",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [270.0, 270.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_06",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [300.0, 300.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.96
+    },
+    {
+      "id_bvs": "bvs_07",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [330.0, 330.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.96
+    },
+    {
+      "id_bvs": "bvs_08",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [360.0, 360.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.95
+    },
+    {
+      "id_bvs": "bvs_09",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [390.0, 390.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.95
+    },
+    {
+      "id_bvs": "bvs_10",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [420.0, 420.0, 90.0],
+      "nachalnaya_skorost": [3.0, 1.0, 0.0],
+      "zapas_energii": 0.94
+    }
+  ],
+  "tseli_zadaniya": [
+    {
+      "id_tseli": "tsel_pokrytiya",
+      "tip": "pokrytie_oblasti",
+      "opisanie": "Подготовить сценарий для будущей проверки равномерного распределения роя по области интереса.",
+      "kriterii": "Проектная оценка доли покрытия области и времени выполнения задания."
+    },
+    {
+      "id_tseli": "zona_interesa_sever",
+      "tip": "zona_interesa",
+      "opisanie": "Северный участок области интереса для будущего покрытия.",
+      "kriterii": "Сопоставление проектной плотности присутствия БВС."
+    }
+  ],
+  "prepyatstviya": [],
+  "zony_zapreta": [
+    {
+      "id_zony": "zona_zapreta_01",
+      "nazvanie": "Техническая зона без входа",
+      "granitsy": {
+        "xmin": 900.0,
+        "xmax": 1020.0,
+        "ymin": 80.0,
+        "ymax": 200.0,
+        "zmin": 0.0,
+        "zmax": 180.0
+      }
+    }
+  ],
+  "otkazy": [],
+  "pomekhi_svyazi": [],
+  "ogranicheniya_bezopasnosti": {
+    "issledovatelskii_harakter": true,
+    "net_realnogo_upravleniya": true,
+    "net_vrednogo_naznacheniya": true
+  },
+  "ozhidaemye_pokazateli": [
+    {
+      "id_pokazatelya": "vremya_vypolneniya_zadaniya",
+      "opisanie": "Будущая оценка времени достижения проектного покрытия."
+    },
+    {
+      "id_pokazatelya": "dolya_vremeni_svyaznogo_roya",
+      "opisanie": "Будущая оценка связности роя в процессе покрытия области."
+    }
+  ]
+}

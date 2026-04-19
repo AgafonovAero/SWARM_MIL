@@ -1,0 +1,141 @@
+{
+  "id_scenariya": "poisk_tseli",
+  "nazvanie": "Поиск области вероятного нахождения цели задания",
+  "opisanie": "Сценарий задает рой из восьми БВС для будущей проверки поиска области вероятного нахождения условного объекта наблюдения.",
+  "nachalnoe_chislo": 303,
+  "vremya_modelirovaniya": 200.0,
+  "shag_modelirovaniya": 1.0,
+  "oblast_poleta": {
+    "xmin": 0.0,
+    "xmax": 1500.0,
+    "ymin": 0.0,
+    "ymax": 1000.0,
+    "zmin": 0.0,
+    "zmax": 300.0
+  },
+  "sostav_roya": [
+    {
+      "id_bvs": "bvs_01",
+      "rol": "vedushchii",
+      "nachalnoe_polozhenie": [200.0, 200.0, 120.0],
+      "nachalnaya_skorost": [2.5, 1.5, 0.0],
+      "zapas_energii": 1.0
+    },
+    {
+      "id_bvs": "bvs_02",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [240.0, 220.0, 120.0],
+      "nachalnaya_skorost": [2.5, 1.5, 0.0],
+      "zapas_energii": 0.99
+    },
+    {
+      "id_bvs": "bvs_03",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [280.0, 240.0, 120.0],
+      "nachalnaya_skorost": [2.5, 1.5, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_04",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [320.0, 260.0, 120.0],
+      "nachalnaya_skorost": [2.5, 1.5, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_05",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [360.0, 280.0, 120.0],
+      "nachalnaya_skorost": [2.5, 1.5, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_06",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [400.0, 300.0, 120.0],
+      "nachalnaya_skorost": [2.5, 1.5, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_07",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [440.0, 320.0, 120.0],
+      "nachalnaya_skorost": [2.5, 1.5, 0.0],
+      "zapas_energii": 0.96
+    },
+    {
+      "id_bvs": "bvs_08",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [480.0, 340.0, 120.0],
+      "nachalnaya_skorost": [2.5, 1.5, 0.0],
+      "zapas_energii": 0.96
+    }
+  ],
+  "tseli_zadaniya": [
+    {
+      "id_tseli": "tsel_poiskovoi_oblasti",
+      "tip": "poisk_oblasti",
+      "opisanie": "Подготовить сценарий для будущей проверки поиска области вероятного нахождения условного объекта наблюдения.",
+      "kriterii": "Проектная оценка времени обнаружения области интереса и числа перестроений."
+    },
+    {
+      "id_tseli": "oblast_vozmozhnogo_nahozhdeniya",
+      "tip": "oblast_interesa",
+      "opisanie": "Область вероятного нахождения условного объекта наблюдения.",
+      "granitsy": {
+        "xmin": 980.0,
+        "xmax": 1180.0,
+        "ymin": 560.0,
+        "ymax": 760.0,
+        "zmin": 0.0,
+        "zmax": 180.0
+      },
+      "kriterii": "Будущая проектная оценка доли обследованной области."
+    }
+  ],
+  "prepyatstviya": [
+    {
+      "id_prepyatstviya": "prepyatstvie_01",
+      "tip": "parallelepiped",
+      "granitsy": {
+        "xmin": 700.0,
+        "xmax": 820.0,
+        "ymin": 300.0,
+        "ymax": 460.0,
+        "zmin": 0.0,
+        "zmax": 160.0
+      }
+    }
+  ],
+  "zony_zapreta": [
+    {
+      "id_zony": "zona_zapreta_01",
+      "nazvanie": "Ограниченная зона обслуживания",
+      "granitsy": {
+        "xmin": 1200.0,
+        "xmax": 1350.0,
+        "ymin": 100.0,
+        "ymax": 240.0,
+        "zmin": 0.0,
+        "zmax": 150.0
+      }
+    }
+  ],
+  "otkazy": [],
+  "pomekhi_svyazi": [],
+  "ogranicheniya_bezopasnosti": {
+    "issledovatelskii_harakter": true,
+    "net_realnogo_upravleniya": true,
+    "net_vrednogo_naznacheniya": true
+  },
+  "ozhidaemye_pokazateli": [
+    {
+      "id_pokazatelya": "vremya_vypolneniya_zadaniya",
+      "opisanie": "Будущая оценка времени достижения области интереса."
+    },
+    {
+      "id_pokazatelya": "dolya_dostavlennyh_soobshenii",
+      "opisanie": "Будущая оценка доли доставленных сообщений наблюдения."
+    }
+  ]
+}

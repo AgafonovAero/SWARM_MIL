@@ -1,11 +1,12 @@
 function proverka_skrytyh_znakov(koren_proekta)
-spisok_failov = poluchit_spisok_tekstovyh_failov(koren_proekta, {'.m', '.md'});
+spisok_failov = poluchit_spisok_tekstovyh_failov( ...
+    koren_proekta, {'.m', '.md', '.json'});
 
 for nomer_faila = 1:numel(spisok_failov)
     proverit_fail_na_skrytye_znaki(spisok_failov{nomer_faila});
 end
 
-soobshchenie('Скрытые управляющие знаки в текстовых файлах не обнаружены.');
+soobshchenie('Скрытые управляющие знаки в текстовых файлах проекта не обнаружены.');
 end
 
 function spisok_failov = poluchit_spisok_tekstovyh_failov(koren_proekta, rasshireniya)
@@ -16,13 +17,13 @@ for nomer_rasshireniya = 1:numel(rasshireniya)
     naidennye_faily = dir(fullfile(koren_proekta, maska));
 
     for nomer_faila = 1:numel(naidennye_faily)
-        spisok_failov{end + 1} = fullfile( ...
+        spisok_failov{end + 1} = fullfile( ... %#ok<AGROW>
             naidennye_faily(nomer_faila).folder, ...
-            naidennye_faily(nomer_faila).name); %#ok<AGROW>
+            naidennye_faily(nomer_faila).name);
     end
 end
 
-spisok_failov = unique(spisok_failov);
+spisok_failov = sort(unique(spisok_failov));
 end
 
 function proverit_fail_na_skrytye_znaki(put_k_failu)
@@ -42,7 +43,7 @@ for nomer_simvola = 1:numel(kody_simvolov)
         continue
     end
 
-    soobshchenie_ob_oshibke = sprintf([ ...
+    error('%s', sprintf([ ...
         'Обнаружен скрытый управляющий знак в файле %s.%s' ...
         'Номер символа: %d.%s' ...
         'Код знака: U+%04X.%s' ...
@@ -50,21 +51,21 @@ for nomer_simvola = 1:numel(kody_simvolov)
         put_k_failu, newline, ...
         nomer_simvola, newline, ...
         kod_simvola, newline, ...
-        nazvanie_znaka(kod_simvola));
-    error('%s', soobshchenie_ob_oshibke);
+        nazvanie_znaka(kod_simvola)));
 end
 end
 
 function baity = prochitat_baity(put_k_failu)
-identifikator = fopen(put_k_failu, 'r');
+identifikator = fopen(put_k_failu, 'rb');
 if identifikator == -1
     error('%s', sprintf( ...
         'Не удалось открыть файл для проверки скрытых знаков: %s', ...
         put_k_failu));
 end
 
+ochistka = onCleanup(@() fclose(identifikator));
 baity = fread(identifikator, Inf, '*uint8');
-fclose(identifikator);
+clear ochistka
 end
 
 function rezultat = est_dopustimyi_bom_v_nachale(baity, kody_simvolov)
@@ -77,7 +78,10 @@ end
 function rezultat = yavlyaetsya_skrytym_znakom(kod_simvola)
 zapreshennye_kody = [ ...
     hex2dec('00AD') ...
+    hex2dec('061C') ...
     hex2dec('200B') ...
+    hex2dec('200C') ...
+    hex2dec('200D') ...
     hex2dec('200E') ...
     hex2dec('200F') ...
     hex2dec('202A') ...
@@ -100,8 +104,14 @@ function imya = nazvanie_znaka(kod_simvola)
 switch kod_simvola
     case hex2dec('00AD')
         imya = 'мягкий перенос';
+    case hex2dec('061C')
+        imya = 'арабская метка направления письма';
     case hex2dec('200B')
         imya = 'невидимый пробел';
+    case hex2dec('200C')
+        imya = 'нулевой знак без соединения';
+    case hex2dec('200D')
+        imya = 'нулевой знак соединения';
     case hex2dec('200E')
         imya = 'знак направления письма слева направо';
     case hex2dec('200F')

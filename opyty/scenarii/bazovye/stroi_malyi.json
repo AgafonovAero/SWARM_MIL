@@ -1,0 +1,93 @@
+{
+  "id_scenariya": "stroi_malyi",
+  "nazvanie": "Малый рой для будущей проверки удержания строя",
+  "opisanie": "Сценарий задает малый рой из пяти БВС с простым препятствием вне начального строя.",
+  "nachalnoe_chislo": 101,
+  "vremya_modelirovaniya": 120.0,
+  "shag_modelirovaniya": 0.5,
+  "oblast_poleta": {
+    "xmin": 0.0,
+    "xmax": 600.0,
+    "ymin": 0.0,
+    "ymax": 600.0,
+    "zmin": 0.0,
+    "zmax": 200.0
+  },
+  "sostav_roya": [
+    {
+      "id_bvs": "bvs_01",
+      "rol": "vedushchii",
+      "nachalnoe_polozhenie": [100.0, 100.0, 80.0],
+      "nachalnaya_skorost": [4.0, 0.0, 0.0],
+      "zapas_energii": 1.0
+    },
+    {
+      "id_bvs": "bvs_02",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [80.0, 120.0, 80.0],
+      "nachalnaya_skorost": [4.0, 0.0, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_03",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [120.0, 120.0, 80.0],
+      "nachalnaya_skorost": [4.0, 0.0, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_04",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [80.0, 80.0, 80.0],
+      "nachalnaya_skorost": [4.0, 0.0, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_05",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [120.0, 80.0, 80.0],
+      "nachalnaya_skorost": [4.0, 0.0, 0.0],
+      "zapas_energii": 0.97
+    }
+  ],
+  "tseli_zadaniya": [
+    {
+      "id_tseli": "tsel_uderzhanie_stroya",
+      "tip": "uderzhanie_stroya",
+      "opisanie": "Подготовить сценарий для будущей проверки сохранения начальной структуры роя.",
+      "kriterii": "Проектная оценка средней ошибки строя и числа перестроений."
+    }
+  ],
+  "prepyatstviya": [
+    {
+      "id_prepyatstviya": "prepyatstvie_01",
+      "tip": "parallelepiped",
+      "granitsy": {
+        "xmin": 350.0,
+        "xmax": 420.0,
+        "ymin": 350.0,
+        "ymax": 420.0,
+        "zmin": 0.0,
+        "zmax": 120.0
+      }
+    }
+  ],
+  "zony_zapreta": [],
+  "otkazy": [],
+  "pomekhi_svyazi": [],
+  "ogranicheniya_bezopasnosti": {
+    "issledovatelskii_harakter": true,
+    "net_realnogo_upravleniya": true,
+    "net_vrednogo_naznacheniya": true
+  },
+  "ozhidaemye_pokazateli": [
+    {
+      "id_pokazatelya": "srednyaya_oshibka_stroya",
+      "opisanie": "Будущая проектная оценка отклонения от начальной структуры."
+    },
+    {
+      "id_pokazatelya": "chislo_perestroenii_zvenev",
+      "opisanie": "Будущая проектная оценка числа перестроений роя."
+    }
+  ]
+}

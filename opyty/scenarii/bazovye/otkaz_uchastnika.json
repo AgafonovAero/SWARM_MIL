@@ -1,0 +1,123 @@
+{
+  "id_scenariya": "otkaz_uchastnika",
+  "nazvanie": "Отказ участника для будущей проверки устойчивости роя",
+  "opisanie": "Сценарий задает рой из десяти БВС и одно событие потери работоспособности участника в ходе будущего опыта.",
+  "nachalnoe_chislo": 404,
+  "vremya_modelirovaniya": 240.0,
+  "shag_modelirovaniya": 1.0,
+  "oblast_poleta": {
+    "xmin": 0.0,
+    "xmax": 1400.0,
+    "ymin": 0.0,
+    "ymax": 900.0,
+    "zmin": 0.0,
+    "zmax": 260.0
+  },
+  "sostav_roya": [
+    {
+      "id_bvs": "bvs_01",
+      "rol": "vedushchii",
+      "nachalnoe_polozhenie": [160.0, 140.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 1.0
+    },
+    {
+      "id_bvs": "bvs_02",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [200.0, 160.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.99
+    },
+    {
+      "id_bvs": "bvs_03",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [240.0, 180.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_04",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [280.0, 200.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.98
+    },
+    {
+      "id_bvs": "bvs_05",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [320.0, 220.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_06",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [360.0, 240.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.97
+    },
+    {
+      "id_bvs": "bvs_07",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [400.0, 260.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.96
+    },
+    {
+      "id_bvs": "bvs_08",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [440.0, 280.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.96
+    },
+    {
+      "id_bvs": "bvs_09",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [480.0, 300.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.95
+    },
+    {
+      "id_bvs": "bvs_10",
+      "rol": "uchastnik",
+      "nachalnoe_polozhenie": [520.0, 320.0, 100.0],
+      "nachalnaya_skorost": [3.5, 0.5, 0.0],
+      "zapas_energii": 0.95
+    }
+  ],
+  "tseli_zadaniya": [
+    {
+      "id_tseli": "tsel_ustoichivosti",
+      "tip": "ustoichivost_roya",
+      "opisanie": "Подготовить сценарий для будущей проверки устойчивости роя при отказе одного участника.",
+      "kriterii": "Проектная оценка связности, числа отказавших БВС и времени выполнения задания."
+    }
+  ],
+  "prepyatstviya": [],
+  "zony_zapreta": [],
+  "otkazy": [
+    {
+      "id_sobytiya": "otkaz_01",
+      "id_bvs": "bvs_07",
+      "tip": "poterya_rabotosposobnosti",
+      "vremya_sobytiya": 90.0,
+      "opisanie": "Будущее событие потери работоспособности участника без моделирования последствий на этапе 2."
+    }
+  ],
+  "pomekhi_svyazi": [],
+  "ogranicheniya_bezopasnosti": {
+    "issledovatelskii_harakter": true,
+    "net_realnogo_upravleniya": true,
+    "net_vrednogo_naznacheniya": true
+  },
+  "ozhidaemye_pokazateli": [
+    {
+      "id_pokazatelya": "dolya_otkazavshih_bvs",
+      "opisanie": "Будущая оценка доли отказавших участников."
+    },
+    {
+      "id_pokazatelya": "dolya_vremeni_svyaznogo_roya",
+      "opisanie": "Будущая оценка связности роя после отказа."
+    }
+  ]
+}
