@@ -25,8 +25,9 @@ save(fullfile(put_k_papke, 'result.mat'), 'rezultat_serii');
 zapisat_json(fullfile(put_k_papke, 'metrics.json'), rezultat_serii.tablica_sravneniya);
 zapisat_json(fullfile(put_k_papke, 'plan_used.json'), rezultat_serii.plan_serii);
 if isfield(rezultat_serii, 'resursnaya_svodka')
-    zapisat_json(fullfile(put_k_papke, 'resources.json'), ...
-        rezultat_serii.resursnaya_svodka.tablica_resursov);
+    zapisat_json( ...
+        fullfile(put_k_papke, 'resources.json'), ...
+        podgotovit_dannye_resursov_k_sohraneniyu(rezultat_serii.resursnaya_svodka));
 end
 zapisat_utf8_fail(fullfile(put_k_papke, 'summary.md'), ...
     sobrat_summary_serii(rezultat_serii));
@@ -76,6 +77,29 @@ if isfield(rezultat_serii, 'resursnaya_svodka')
         }]; %#ok<AGROW>
 end
 
+if isfield(rezultat_serii, 'resursnaya_svodka') ...
+        && isfield(rezultat_serii.resursnaya_svodka, 'chislo_dopustimyh_variantov')
+    chislo_dopustimyh = rezultat_serii.resursnaya_svodka.chislo_dopustimyh_variantov;
+    chislo_nedopustimyh = rezultat_serii.resursnaya_svodka.chislo_nedopustimyh_variantov;
+    stroki = [stroki; { ...
+        ''
+        '## Ресурсная допустимость'
+        ''
+        ['- Ресурсно допустимых вариантов: ' num2str(chislo_dopustimyh) '.']
+        ['- Ресурсно недопустимых вариантов: ' num2str(chislo_nedopustimyh) '.']
+        }]; %#ok<AGROW>
+
+    osnovnye_prichiny = rezultat_serii.resursnaya_svodka.osnovnye_prichiny_narushenii;
+    if isempty(osnovnye_prichiny)
+        stroki = [stroki; {'- Нарушения ресурсной допустимости не обнаружены.'}]; %#ok<AGROW>
+    else
+        stroki = [stroki; {'- Основные причины нарушений:'}]; %#ok<AGROW>
+        for nomer_prichiny = 1:numel(osnovnye_prichiny)
+            stroki{end + 1} = ['- ' osnovnye_prichiny{nomer_prichiny}]; %#ok<AGROW>
+        end
+    end
+end
+
 if isfield(rezultat_serii, 'puti_k_grafikam_resursov') ...
         && ~isempty(rezultat_serii.puti_k_grafikam_resursov)
     stroki = [stroki; { ...
@@ -115,4 +139,29 @@ end
 ochistka = onCleanup(@() fclose(identifikator));
 fprintf(identifikator, '%s', tekst);
 clear ochistka
+end
+
+function dannye = podgotovit_dannye_resursov_k_sohraneniyu(resursnaya_svodka)
+dannye = struct();
+dannye.tablica_resursov = table2struct(resursnaya_svodka.tablica_resursov);
+
+if isfield(resursnaya_svodka, 'opisaniya_narushenii_po_variantam')
+    dannye.opisaniya_narushenii_po_variantam = ...
+        resursnaya_svodka.opisaniya_narushenii_po_variantam;
+end
+
+if isfield(resursnaya_svodka, 'chislo_dopustimyh_variantov')
+    dannye.chislo_dopustimyh_variantov = ...
+        resursnaya_svodka.chislo_dopustimyh_variantov;
+end
+
+if isfield(resursnaya_svodka, 'chislo_nedopustimyh_variantov')
+    dannye.chislo_nedopustimyh_variantov = ...
+        resursnaya_svodka.chislo_nedopustimyh_variantov;
+end
+
+if isfield(resursnaya_svodka, 'osnovnye_prichiny_narushenii')
+    dannye.osnovnye_prichiny_narushenii = ...
+        resursnaya_svodka.osnovnye_prichiny_narushenii;
+end
 end

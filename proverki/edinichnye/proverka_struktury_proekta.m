@@ -73,6 +73,8 @@ obyazatelnye_faily = {
         'proverka_serii_opytov_etapa_10.m')
     fullfile('proverki', 'edinichnye', ...
         'proverka_resursov_etapa_11.m')
+    fullfile('proverki', 'edinichnye', ...
+        'proverka_resursnoi_dopustimosti_etapa_12.m')
     fullfile('raschet', 'otsenka', 'soobshchenie.m')
     fullfile('raschet', 'bvs', 'OPISANIE_KINEMATIKI.md')
     fullfile('raschet', 'bvs', 'sozdat_sostoyanie_bvs_iz_scenariya.m')
@@ -128,6 +130,8 @@ obyazatelnye_faily = {
     fullfile('raschet', 'resursy', 'raschet_resursov_po_opytu.m')
     fullfile('raschet', 'resursy', 'izvlech_pokazateli_resursov.m')
     fullfile('raschet', 'resursy', 'raschet_resursov_po_serii.m')
+    fullfile('raschet', 'resursy', 'otsenit_dopustimost_resursov_opyta.m')
+    fullfile('raschet', 'resursy', 'otsenit_dopustimost_resursov_serii.m')
     fullfile('visualization', 'OPISANIE_VIZUALIZACII.md')
     fullfile('visualization', 'sobrat_dannye_demonstracii_roya.m')
     fullfile('visualization', 'podgotovit_dannye_vizualizacii.m')
