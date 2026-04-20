@@ -47,12 +47,59 @@ pokazateli.srednyaya_zanyatost_ocheredi = ...
     mean(rezultat_resursov.zanyatost_ocheredei.srednyaya_zanyatost);
 pokazateli.maksimalnaya_zanyatost_ocheredi = ...
     max(rezultat_resursov.zanyatost_ocheredei.maksimalnaya_zanyatost);
+pokazateli.srednyaya_nagruzka_svyazi = ...
+    srednee_znachenie_nagruzki_svyazi(rezultat_resursov);
+pokazateli.maksimalnaya_nagruzka_svyazi = ...
+    maksimalnoe_znachenie_nagruzki_svyazi(rezultat_resursov);
 pokazateli.srednyaya_nagruzka_golovnyh_bvs = ...
     mean(rezultat_resursov.nagruzka_golovnyh_bvs.otnositelnaya_nagruzka_golovnogo_bvs);
 pokazateli.maksimalnaya_nagruzka_golovnogo_bvs = ...
     double(rezultat_resursov.maksimalnaya_nagruzka_golovnogo_bvs);
+dopustimost = poluchit_dopustimost_resursov(rezultat_resursov);
+if ~isempty(dopustimost)
+    pokazateli.itog_dopustim = double(dopustimost.itog_dopustim);
+    pokazateli.energia_dopustima = double(dopustimost.energia_dopustima);
+    pokazateli.vychislitelnaya_nagruzka_dopustima = ...
+        double(dopustimost.vychislitelnaya_nagruzka_dopustima);
+    pokazateli.ocheredi_dopustimy = double(dopustimost.ocheredi_dopustimy);
+    pokazateli.nagruzka_golovnogo_bvs_dopustima = ...
+        double(dopustimost.nagruzka_golovnogo_bvs_dopustima);
+    pokazateli.nagruzka_svyazi_dopustima = ...
+        double(dopustimost.nagruzka_svyazi_dopustima);
+    pokazateli.chislo_narushenii = double(numel(dopustimost.narusheniya));
+end
 
 proverit_pokazateli(pokazateli);
+end
+
+function znachenie = srednee_znachenie_nagruzki_svyazi(rezultat_resursov)
+if ~isfield(rezultat_resursov, 'nagruzka_svyazi_po_vremeni') ...
+        || isempty(rezultat_resursov.nagruzka_svyazi_po_vremeni)
+    znachenie = 0;
+else
+    znachenie = mean(rezultat_resursov.nagruzka_svyazi_po_vremeni, 'all');
+end
+end
+
+function znachenie = maksimalnoe_znachenie_nagruzki_svyazi(rezultat_resursov)
+if ~isfield(rezultat_resursov, 'nagruzka_svyazi_po_vremeni') ...
+        || isempty(rezultat_resursov.nagruzka_svyazi_po_vremeni)
+    znachenie = 0;
+else
+    znachenie = max(rezultat_resursov.nagruzka_svyazi_po_vremeni, [], 'all');
+end
+end
+
+function dopustimost = poluchit_dopustimost_resursov(rezultat_resursov)
+if isfield(rezultat_resursov, 'dopustimost_resursov')
+    dopustimost = rezultat_resursov.dopustimost_resursov;
+elseif isfield(rezultat_resursov, 'parametry_resursov')
+    dopustimost = otsenit_dopustimost_resursov_opyta( ...
+        rezultat_resursov, ...
+        rezultat_resursov.parametry_resursov);
+else
+    dopustimost = [];
+end
 end
 
 function proverit_pokazateli(pokazateli)
@@ -66,5 +113,13 @@ if pokazateli.dolya_bvs_s_dostatochnoi_energiey < 0 ...
         || pokazateli.dolya_bvs_s_dostatochnoi_energiey > 1
     error('%s', ...
         'Доля БВС с достаточной энергией должна быть в диапазоне от 0 до 1.');
+end
+
+if pokazateli.srednyaya_nagruzka_svyazi < 0 ...
+        || pokazateli.srednyaya_nagruzka_svyazi > 1 ...
+        || pokazateli.maksimalnaya_nagruzka_svyazi < 0 ...
+        || pokazateli.maksimalnaya_nagruzka_svyazi > 1
+    error('%s', ...
+        'Показатели нагрузки связи должны быть в диапазоне от 0 до 1.');
 end
 end
