@@ -8,9 +8,14 @@ if ~isstruct(rezultat_serii) || ~isfield(rezultat_serii, 'id_serii')
     error('%s', 'Результат серии должен содержать идентификатор серии.');
 end
 
-metka_vremeni = char(datetime('now', 'Format', 'yyyyMMdd_HHmmss'));
-imya_papki = sprintf('%s_%s', rezultat_serii.id_serii, metka_vremeni);
-put_k_papke = fullfile(koren_proekta, 'opyty', 'rezultaty', 'serii', imya_papki);
+if isfield(rezultat_serii, 'papka_rezultatov') ...
+        && strlength(string(rezultat_serii.papka_rezultatov)) > 0
+    put_k_papke = char(string(rezultat_serii.papka_rezultatov));
+else
+    metka_vremeni = char(datetime('now', 'Format', 'yyyyMMdd_HHmmss'));
+    imya_papki = sprintf('%s_%s', rezultat_serii.id_serii, metka_vremeni);
+    put_k_papke = fullfile(koren_proekta, 'opyty', 'rezultaty', 'serii', imya_papki);
+end
 
 if ~isfolder(put_k_papke)
     mkdir(put_k_papke);
@@ -19,6 +24,10 @@ end
 save(fullfile(put_k_papke, 'result.mat'), 'rezultat_serii');
 zapisat_json(fullfile(put_k_papke, 'metrics.json'), rezultat_serii.tablica_sravneniya);
 zapisat_json(fullfile(put_k_papke, 'plan_used.json'), rezultat_serii.plan_serii);
+if isfield(rezultat_serii, 'resursnaya_svodka')
+    zapisat_json(fullfile(put_k_papke, 'resources.json'), ...
+        rezultat_serii.resursnaya_svodka.tablica_resursov);
+end
 zapisat_utf8_fail(fullfile(put_k_papke, 'summary.md'), ...
     sobrat_summary_serii(rezultat_serii));
 end
@@ -41,12 +50,41 @@ stroki = {
     ['- Среднее число звеньев: ' num2str(chislo_zvenev, '%.4f') '.']
     ['- Средняя доля доставленных сообщений: ' num2str(dolya_dostavki, '%.4f') '.']
     ''
+    '## Сохраненные файлы'
+    ''
+    '- `result.mat`;'
+    '- `metrics.json`;'
+    '- `plan_used.json`;'
+    '- `summary.md`.'
+    ''
     '## Ограничения серии'
     ''
-    '- используются уже реализованные расчетные слои этапов 3–9;'
+    '- используются уже реализованные расчетные слои этапов 3–10;'
     '- управление, обучение и распределение ресурсов не реализуются;'
     '- результаты серии предназначены для исследовательского сравнения параметров.'
     };
+
+if isfield(rezultat_serii, 'resursnaya_svodka')
+    srednii_ostatok = mean( ...
+        rezultat_serii.resursnaya_svodka.tablica_resursov.srednii_ostatok_energii);
+    stroki = [stroki; { ...
+        ''
+        '## Ресурсная сводка'
+        ''
+        ['- Средний остаток энергии по вариантам: ' num2str(srednii_ostatok, '%.4f') '.']
+        '- Сохранен файл `resources.json`.'
+        }]; %#ok<AGROW>
+end
+
+if isfield(rezultat_serii, 'puti_k_grafikam_resursov') ...
+        && ~isempty(rezultat_serii.puti_k_grafikam_resursov)
+    stroki = [stroki; { ...
+        ''
+        '## Графики ресурсов'
+        ''
+        '- В папке серии сохранены графики ресурсных показателей в формате `.png`.'
+        }]; %#ok<AGROW>
+end
 
 tekst = strjoin(stroki, newline);
 end
